@@ -69,7 +69,7 @@ Publisher                Index                  Agent runtime             Model
 - 認可プロトコルではありません。実行バインディングは呼び出すサービスの認可（たとえば OAuth）を使います。その方法はドラフトに書かれています。リファレンス実装はサンドボックスの認可を使い、OAuth クライアントは持っていません。
 - 決済プロトコルではありません。エージェントがユーザーに確認せずに使えるようになるために、決済・購入プロトコルが保証すべきことを定めます。
 
-UCP、ARD、agent.json、A2A、OAuth との関係と出典、およびまだレビューしていない関連仕様：[docs/prior-art.md](docs/prior-art.md)。この設計にした理由：[docs/design-rationale.md](docs/design-rationale.md)（英語）。
+UCP、ARD、agent.json、A2A、OAuth、ACP、AP2 との関係と出典、およびまだレビューしていない関連仕様：[docs/prior-art.md](docs/prior-art.md)。この設計にした理由：[docs/design-rationale.md](docs/design-rationale.md)（英語）。
 
 ## 現状と制約
 

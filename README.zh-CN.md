@@ -69,7 +69,7 @@ Publisher                Index                  Agent runtime             Model
 - 不是授权协议。执行绑定（execution binding）使用它所调用服务的授权机制，例如 OAuth；草案说明了具体方式。参考实现使用沙盒授权，没有 OAuth 客户端。
 - 不是支付协议。它规定的是：支付或结账协议必须提供哪些保证，智能体才能不经询问用户就使用它。
 
-ADDP 与 UCP、ARD、agent.json、A2A 和 OAuth 的关系及出处，以及还有哪些相关工作有待评审：[docs/prior-art.md](docs/prior-art.md)。为什么这样设计：[docs/design-rationale.md](docs/design-rationale.md)（英文）。
+ADDP 与 UCP、ARD、agent.json、A2A、OAuth、ACP 和 AP2 的关系及出处，以及还有哪些相关工作有待评审：[docs/prior-art.md](docs/prior-art.md)。为什么这样设计：[docs/design-rationale.md](docs/design-rationale.md)（英文）。
 
 ## 状态与局限
 

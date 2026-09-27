@@ -133,7 +133,7 @@ revisado ADDP. Cómo conectar y probar uno:
 - No es un protocolo de pago. Establece lo que un protocolo de pago o de compra debe
   garantizar para que un agente pueda usarlo sin preguntar al usuario.
 
-Relación con UCP, ARD, agent.json, A2A y OAuth, con fuentes, y qué trabajos relacionados
+Relación con UCP, ARD, agent.json, A2A, OAuth, ACP y AP2, con fuentes, y qué trabajos relacionados
 quedan por revisar: [docs/prior-art.md](docs/prior-art.md). Por qué está diseñado así:
 [docs/design-rationale.md](docs/design-rationale.md) (en inglés).
 

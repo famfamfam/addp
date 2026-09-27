@@ -12,8 +12,13 @@ ADDP is an experimental draft. The most useful contributions right now are:
   [docs/model-integration.md](docs/model-integration.md) counts too.
 - **Prior art we missed.** If something already does part of this, say where and how
   far the overlap goes. [docs/prior-art.md](docs/prior-art.md#not-yet-reviewed) lists
-  works that have not been checked yet (ACP, AP2, MCP and WebMCP, Web Bot Auth,
-  schema.org Actions, llms.txt), each with the question a review has to answer.
+  works that have not been checked yet (MCP and WebMCP, Web Bot Auth, schema.org
+  Actions, llms.txt, checkout in UCP), each with the question a review has to answer.
+- **Execution bindings for real protocols.** The same page compares ACP and AP2 with
+  the draft's binding requirements. An ACP extension that lets a merchant reject a
+  completion whose total differs from what the agent checked, or a binding that carries
+  the ADDP intent as AP2 open mandates, would move the runtime profile out of the
+  sandbox.
 
 ## Changing the specification
 

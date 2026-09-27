@@ -127,7 +127,7 @@ Publisher                Index                  Agent runtime             Model
   оформления заказа должен гарантировать, чтобы агент мог пользоваться им, не спрашивая
   пользователя.
 
-Как ADDP соотносится с UCP, ARD, agent.json, A2A и OAuth, с источниками, и какие смежные
+Как ADDP соотносится с UCP, ARD, agent.json, A2A, OAuth, ACP и AP2, с источниками, и какие смежные
 работы ещё предстоит проверить: [docs/prior-art.md](docs/prior-art.md). Почему устроено
 именно так: [docs/design-rationale.md](docs/design-rationale.md) (на английском).
 

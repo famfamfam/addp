@@ -130,7 +130,7 @@ um deles: [docs/model-integration.md](docs/model-integration.md) (em inglês).
 - Não é um protocolo de pagamento. Ele define o que um protocolo de pagamento ou de
   checkout precisa garantir para que um agente possa usá-lo sem perguntar ao usuário.
 
-Relação com UCP, ARD, agent.json, A2A e OAuth, com fontes, e quais trabalhos relacionados
+Relação com UCP, ARD, agent.json, A2A, OAuth, ACP e AP2, com fontes, e quais trabalhos relacionados
 ainda faltam revisar: [docs/prior-art.md](docs/prior-art.md). Por que foi projetado
 assim: [docs/design-rationale.md](docs/design-rationale.md) (em inglês).
 

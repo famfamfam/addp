@@ -172,7 +172,10 @@ not adopted:
   Signatures prove that certain bytes were signed, not that the user understood them,
   and nothing checked so far shows that payment disputes would accept them as evidence.
   The journal and recorded outcomes give the user evidence without a new signature
-  infrastructure.
+  infrastructure. Where signed approval is available, ADDP should reuse it rather than
+  define its own: AP2 mandates bind a payment to a merchant-signed checkout and carry
+  the user's limits in a form that merchants and credential providers verify (see
+  [prior-art.md](prior-art.md)).
 - **NFKC normalization and a restricted character set for all identifiers.** That would
   change HTTPS URLs and break identity. ADDP compares identifiers exactly and escapes
   untrusted text where it is displayed.

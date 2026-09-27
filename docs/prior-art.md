@@ -13,11 +13,16 @@ reviewed and may overlap more than this page says.
 | agent.json ("Agent Web Protocol") | Actions of one site | `/agent.json` or `/.well-known/agent.json` | Manifest and capability documents | Feeds; index queries; re-evaluation; spending limits |
 | A2A agent cards | Agents | `/.well-known/agent-card.json` | None beyond "a JSON file at a well-known URI" | Everything item-related |
 | OAuth (RFC 9728, 9396, 8693) | Authorization servers; delegated authority | Protected resource metadata | ADDP uses it as is | Nothing; ADDP defines no authorization |
+| ACP | Checkout at one merchant; product feeds pushed to an agent | `/.well-known/acp.json` | Idempotent checkout; feeds; "checkout is authoritative" | Queries across indexes; feed deletions and sequence numbers; an expected total at completion (missing in ACP) |
+| AP2 | Nothing; secures purchases inside a commerce protocol | None | User approval with limits (open mandates); exact binding of payment to checkout | Discovery; runtime handling of lost responses and reservations; AP2 could carry the ADDP intent |
 
 The common gap: none of these defines how an index keeps a consistent copy of many
 publishers' items, what a query over them means, or that a client must re-check an
-index's claim at the origin before relying on it. None states what an agent must check
-before spending the user's money. That is the part ADDP is an experiment about.
+index's claim at the origin before relying on it. AP2 states what merchants and
+credential providers verify, and ACP how a merchant handles repeated requests, but
+neither says what the agent's own runtime must record and check before it sends a
+payment, or what it does when the response is lost. That is the part ADDP is an
+experiment about.
 
 ## Checked
 
@@ -101,6 +106,139 @@ before spending the user's money. That is the part ADDP is an experiment about.
 - RFC 9396 (Rich Authorization Requests) can carry operation details if the
   authorization server defines a type for them. ADDP does not define one.
 
+### Agentic Commerce Protocol (ACP)
+
+Checked on 2026-09-27 against the repository at commit `7fdd78d` (2026-07-18); latest
+released version `2026-04-17`.
+
+- Maintained by OpenAI and Stripe, status "beta", Apache 2.0. A technical steering
+  committee has up to seven organizations; the founding maintainers appoint the seats.
+  Versions are dates.
+- Checkout API that the agent calls at the merchant: create, update and retrieve
+  (`GET /checkout_sessions/{id}`) a session, then `complete` or `cancel` it. Amounts are
+  integers in minor units. Requests carry a bearer token that the merchant must accept;
+  a request signature is recommended. How the token is issued is not specified in the
+  documents read, so an ADDP runtime would need credentials from each merchant or seller
+  platform it uses.
+- Idempotency. The `2026-04-17` OpenAPI requires `Idempotency-Key` on every POST,
+  scoped to the authenticated identity and endpoint, with errors
+  `idempotency_conflict` (same key, different body, 422) and `idempotency_in_flight`
+  (409). The RFC text at the checked commit (section 6, marked as an unreleased rewrite)
+  adds: an identical request returns the original response and status without repeating
+  side effects; responses with status 5xx are not stored, and a retry after one is
+  processed as a new request; keys are kept for at least 24 hours; storing the key and
+  the operation in one transaction is recommended, not required.
+- The request that completes a checkout (`CheckoutSessionCompleteRequest`, `2026-04-17`)
+  has `buyer`, `payment_data`, `authentication_result`, `affiliate_attribution`,
+  `risk_signals` and `marketing_consents`. It carries no expected total and no session
+  version, so the merchant cannot tell that the session changed after the agent last
+  read it.
+- Delegated payment: a vault token usable only within an allowance with `reason`
+  `one_time`, `max_amount`, `currency`, `checkout_session_id`, `merchant_id` and
+  `expires_at`. This ties the token to one checkout and caps the amount. Like the Stripe
+  token below, it does not fix the amount.
+- Discovery document at `/.well-known/acp.json` (added in `2026-04-17`): protocol
+  versions, API base URL, transports and services.
+- Product feeds (RFC status "Proposal"; the `2026-04-17` release notes add the Feed API
+  as an "unreleased" surface): the merchant pushes a full snapshot or upserts products
+  to a feed service hosted by the agent. Partial updates cannot delete products; cursor
+  deltas are deferred; no query is defined. "Agents MUST treat checkout responses as
+  authoritative even when they differ from feed data", which is the same principle as
+  ADDP's re-check at the origin.
+- Intent traces (proposal): an agent may send a structured reason when it cancels a
+  checkout, for example price. That can reveal the user's limit to the merchant.
+- Sources: <https://github.com/agentic-commerce-protocol/agentic-commerce-protocol>
+  (`rfcs/rfc.agentic_checkout.md`, `rfcs/rfc.delegate_payment.md`,
+  `rfcs/rfc.product_feeds.md`, `rfcs/rfc.discovery.md`, `rfcs/rfc.intent_traces.md`,
+  `spec/2026-04-17/openapi/openapi.agentic_checkout.yaml`, `changelog/2026-04-17.md`,
+  `docs/governance.md`)
+
+**ACP against the binding requirements of the draft:**
+
+| Requirement | ACP `2026-04-17` |
+|---|---|
+| 1. Reject an operation that does not match the quote | Not met. `complete` carries no expected total or session version; the payment allowance only caps the amount. Needs an ACP extension, for example an expected total or session revision that the merchant must check on `complete`. |
+| 2. One recorded outcome per identifier, rejections included | Met through `Idempotency-Key`, with two limits: a 5xx response is not recorded, and keys may expire after 24 hours. The runtime has to treat a 5xx as unknown and must not resend after the key may have expired. |
+| 3. Status request per identifier | No such request. Retrieving the session and repeating the identical request with the same key cover the need while the key is kept. |
+| 4. Own authorization | Met: bearer token, and a payment token limited to one checkout, an amount and an expiry. |
+
+Until requirement 1 is met, an ADDP runtime using ACP has to ask the user to confirm
+each completion.
+
+### Agent Payments Protocol (AP2)
+
+Checked on 2026-09-27 against the repository at commit `e1ea56d` (2026-04-29); version
+0.2, released 2026-04-28.
+
+- Repository `google-agentic-commerce/AP2`, Apache 2.0. The specification works "as a
+  security feature within a Commerce Protocol"; catalogs, checkout updates and transport
+  are out of scope. It is "designed explicitly to be compatible with" UCP.
+- Checkout mandate: the merchant signs the checkout as a JWT; the closed mandate
+  carries that JWT and its hash. The merchant must verify the hash and, if open mandates
+  are included, every constraint, and must return a signed checkout receipt on
+  acceptance or rejection.
+- Payment mandate: bound to the same checkout by the hash of the checkout JWT, with
+  payee, amount (integer minor units) and instrument. The credential provider, and the
+  network if any, verify it before issuing a payment credential, and a payment receipt
+  follows. This is an exact binding of the payment to the checkout, which a credential
+  with a maximum amount does not give.
+- Human present: the user sees the closed checkout on a "Trusted Surface" and signs.
+  Human not present: the user signs open mandates with constraints and the agent's key
+  (`cnf`); the agent signs the closed mandates; verifiers check them against the
+  constraints. An agent must not present another open mandate before it has a rejection
+  receipt for the previous one.
+- Constraints: `checkout.allowed_merchants`, `checkout.line_items` (acceptable items and
+  quantities), `payment.allowed_payees`, `payment.amount_range` (integer minor units),
+  `payment.budget`, `payment.agent_recurrence` (frequency, maximum occurrences),
+  `payment.allowed_payment_instruments`, `payment.allowed_pisps`,
+  `payment.execution_date`, `payment.reference`. In the SDK, budget and occurrences are
+  evaluated against a mandate context with past spending and uses, which the verifier
+  has to keep. A credential provider that keeps it can enforce one limit across all of
+  a user's devices.
+- No retry, idempotency or status rules; these are left to the commerce protocol.
+  Mandates and receipts are meant as dispute evidence, but "how this is used for dispute
+  resolution" is out of scope.
+- Inconsistency found: `payment.budget.max` is a JSON number with no stated unit, while
+  `payment.amount_range` uses integer minor units. The Python SDK evaluates the budget as
+  `int(max * 100)` for every currency (`code/sdk/python/ap2/sdk/constraints.py`). A
+  budget of EUR 19.99 becomes 1998 minor units, so a payment of 19.99 is rejected; a
+  budget of JPY 5000 becomes 500000, a hundred times the intended limit. This has not
+  been reported upstream yet.
+- Sources: <https://github.com/google-agentic-commerce/AP2> (`docs/ap2/specification.md`,
+  `docs/ap2/checkout_mandate.md`, `docs/ap2/payment_mandate.md`,
+  `code/sdk/schemas/ap2/*.json`, `code/sdk/python/ap2/sdk/constraints.py`,
+  `CHANGELOG.md`)
+
+**How an ADDP intent maps to AP2 open mandates:**
+
+| ADDP intent | AP2 |
+|---|---|
+| `target.ref`, `target.quantity` | `checkout.allowed_merchants` and `checkout.line_items` with one acceptable item. The ADDP reference (origin, namespace, id) has to be mapped to the merchant object and item id. |
+| `constraints.max_total` | `payment.amount_range` `max` for one payment; `payment.budget` for several. |
+| `constraints.max_count` | `payment.agent_recurrence` `max_occurrences`. |
+| `permissions.substitution: false` | One acceptable item per line. |
+| `expires_at` | `exp`. |
+| `capability_digest` | No equivalent. The closed checkout mandate binds the checkout itself, which is stronger for the transaction. |
+
+AP2 checkout and payment mandates meet requirement 1 by construction. Requirements 2
+and 3 have to come from the commerce protocol that carries the mandates.
+
+### What this means for ADDP
+
+- ADDP should not define its own payment authorization. The intent stays as the
+  runtime's local record; where AP2 is available, a binding can express it as open
+  mandates, and then parties other than the runtime can check the limits (draft section
+  "Limits Across Runtimes").
+- An ACP binding needs an ACP extension for requirement 1. ACP has a proposal process
+  for such changes.
+- The runtime rules (reserve before sending, "unknown" after a lost response, resend
+  only under the same identifier and only while the service keeps it) are not covered by
+  either protocol and remain ADDP's contribution, together with discovery across
+  merchants.
+- ACP product feeds and ADDP feeds serve different directions: ACP feeds are pushed to
+  one agent platform; ADDP feeds are pulled by any index and come with query semantics.
+  If the ACP proposal gains deletions and deltas, the two could share a record format.
+
 ### Payment allowance: Stripe Shared Payment Tokens
 
 - Issued with `usage_limits[currency]`, `usage_limits[max_amount]`,
@@ -127,14 +265,13 @@ answer.
 
 | Work | Area | Question for ADDP |
 |---|---|---|
-| Agentic Commerce Protocol (ACP) | Checkout between agents and merchants | Can an ACP checkout meet the four binding requirements (reject an operation that does not match the quote, record one outcome per identifier including rejections, answer status requests, enforce its own authorization)? If so, ADDP should define an ACP execution binding rather than its own execution objects. |
-| AP2 | Payments started by agents | Does its record of the user's authorization cover what an ADDP intent records (target, limits, expiry, approved capability digest)? Could an intent be expressed as that record or linked to it? |
 | MCP and WebMCP | Tools that models call, on servers and in web pages | Can a query endpoint or an execution binding be offered as a tool without losing the guarantees? How much do tool definitions add to the model's input? Is "not a tool-calling interface" the right boundary? |
 | Web Bot Auth | Identifying automated clients to websites | Should indexes and runtimes use it when fetching feeds and resources? Can publishers use it for rate limits and indexes for binding cursors to clients? |
 | schema.org Actions | Actions described in page markup | Do capability documents duplicate it? Can `offer-search/0.1` facts map to schema.org Offer properties without changing their meaning? |
 | llms.txt | Site content prepared for language models | Does it overlap with the manifest or feeds at all, or only with documentation? |
 
-ACP and AP2 come first: they bear on the first open question in the draft, whether the
-runtime profile should exist on its own or become a profile of existing protocols. Each
-review adds a section under "Checked" with the version, date and sources, a row in the
-summary table, and, where the answer changes the design, an issue against the draft.
+ACP and AP2 were reviewed first (see above). Each further review adds a section under
+"Checked" with the version, date and sources, a row in the summary table, and, where
+the answer changes the design, an issue against the draft. Checkout in UCP was not part
+of the UCP review; whether it meets the binding requirements, alone or with AP2, is the
+next question for the execution side.

@@ -124,9 +124,9 @@ one.
 - Not a payment protocol. It states what a payment or checkout protocol must guarantee
   before an agent may use it without asking the user.
 
-How it relates to UCP, ARD, agent.json, A2A and OAuth, with sources, and which related
-work is still to be reviewed: [docs/prior-art.md](docs/prior-art.md). Why it is
-designed this way: [docs/design-rationale.md](docs/design-rationale.md).
+How it relates to UCP, ARD, agent.json, A2A, OAuth, ACP and AP2, with sources, and
+which related work is still to be reviewed: [docs/prior-art.md](docs/prior-art.md).
+Why it is designed this way: [docs/design-rationale.md](docs/design-rationale.md).
 
 ## Status and limits
 

@@ -1371,6 +1371,23 @@
         </front>
         <refcontent>v0.2, draft</refcontent>
       </reference>
+      <reference anchor="ACP" target="https://github.com/agentic-commerce-protocol/agentic-commerce-protocol">
+        <front>
+          <title>Agentic Commerce Protocol (ACP)</title>
+          <author><organization>OpenAI</organization></author>
+          <author><organization>Stripe</organization></author>
+          <date year="2026"/>
+        </front>
+        <refcontent>version 2026-04-17, beta</refcontent>
+      </reference>
+      <reference anchor="AP2" target="https://github.com/google-agentic-commerce/AP2">
+        <front>
+          <title>Agent Payments Protocol (AP2)</title>
+          <author><organization>AP2 project</organization></author>
+          <date day="28" month="April" year="2026"/>
+        </front>
+        <refcontent>v0.2</refcontent>
+      </reference>
       <reference anchor="SCHEMAORG" target="https://schema.org/">
         <front>
           <title>Schema.org</title>
@@ -1475,6 +1492,32 @@
       feeds, a query whose semantics hold across indexes, re-evaluation at
       the origin, and the runtime profile. If the experiment shows that
       these fit into UCP, they should go there.</dd>
+      <dt>Agentic Commerce Protocol (ACP):</dt>
+      <dd>ACP <xref target="ACP"/> defines a checkout API that an agent calls
+      at a merchant, and a payment token that the merchant can use for one
+      checkout up to a maximum amount. Its idempotency keys meet requirement
+      2 of <xref target="binding-reqs"/>, except that responses with status
+      5xx are not recorded and keys may expire after 24 hours. It has no
+      status request per key; retrieving the checkout session and repeating
+      the identical request serve that purpose while the key is kept. The
+      request that completes a checkout carries no expected total, and the
+      token's maximum caps the charge without fixing it, so requirement 1 is
+      not met without an extension. ACP also proposes product feeds that
+      merchants push to a service hosted by the agent. Like ADDP, it treats
+      the checkout, not the feed, as authoritative.</dd>
+      <dt>Agent Payments Protocol (AP2):</dt>
+      <dd>AP2 <xref target="AP2"/> works inside a commerce protocol and
+      secures a purchase with signed mandates. A closed checkout mandate is
+      bound to a checkout the merchant signed, and a payment mandate to the
+      same checkout, which gives the exact binding that requirement 1 of
+      <xref target="binding-reqs"/> asks for. Without the user present, the
+      user signs open mandates with constraints (merchants, items and
+      quantities, amount range, budget, number of uses, expiry) and the
+      agent signs the closed ones; the merchant and the credential provider
+      check them against the constraints. An intent could be expressed as
+      open mandates, so that parties other than the runtime can enforce its
+      limits (<xref target="sec-limits"/>). AP2 leaves retries, idempotency
+      and status requests to the commerce protocol.</dd>
       <dt>Agentic Resource Discovery (ARD):</dt>
       <dd>ARD <xref target="ARD"/> lets domains publish catalogs of tools,
       APIs, agents and skills at <tt>/.well-known/ard.json</tt>, and lets
@@ -1578,6 +1621,12 @@
       <li>Is ADDP needed as a protocol, or should the feed rules, the query
       semantics and the runtime profile become profiles of UCP, ARD and
       OAuth?</li>
+      <li>Execution bindings for protocols in real use: an ACP binding needs
+      an extension that lets the merchant reject a completion whose total
+      differs from the one the runtime checked; a binding that uses AP2
+      needs a mapping from an intent to open mandates and a commerce
+      protocol that provides requirements 2 and 3 of
+      <xref target="binding-reqs"/>.</li>
       <li>Whether a runtime should also bootstrap from ARD catalogs,
       agent.json files or UCP profiles, and how an index advertises itself
       in ARD registries.</li>
