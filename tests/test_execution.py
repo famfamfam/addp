@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 import json
+import sqlite3
 
 import pytest
 
@@ -18,7 +19,7 @@ def setup(tmp_path, validator, clock):
     journal = Journal(tmp_path / "journal.sqlite", validator, clock)
     service = SandboxService(tmp_path / "service.sqlite", validator, clock)
     intent, quote = load("valid/intent.json"), load("valid/quote.json")
-    journal.approve(intent)
+    journal.approve(intent, approval_method="test-user-confirmation")
     service.put_quote(quote)
     service.issue("g1", "i7", quote["ref"]["publisher"], "EUR", 35000, clock() + 3600)
     return Runtime(journal, {BINDING: service}), intent, quote
@@ -110,7 +111,7 @@ def test_find_is_not_buy(tmp_path, validator, clock):
     journal = Journal(tmp_path / "journal.sqlite", validator, clock)
     intent = load("valid/intent.json")
     intent["permissions"]["purchase"] = False
-    journal.approve(intent)
+    journal.approve(intent, approval_method="test-user-confirmation")
     with pytest.raises(ProtocolError, match="forbidden"):
         journal.reserve("op1", load("valid/operation.json"))
 
@@ -238,9 +239,9 @@ def test_revision_is_immutable_and_spend_survives_amendment(setup):
     changed = deepcopy(intent)
     changed["constraints"]["max_total"]["amount_minor"] = 40000
     with pytest.raises(ProtocolError, match="state_conflict"):
-        runtime.journal.approve(changed)
+        runtime.journal.approve(changed, approval_method="test-user-confirmation")
     changed["revision"] = 2
-    runtime.journal.amend(changed)
+    runtime.journal.amend(changed, approval_method="test-user-confirmation")
     assert runtime.journal.held("i7") == 33399
     with pytest.raises(ProtocolError, match="constraint_failed"):
         run(runtime, quote, op="op2")
@@ -251,7 +252,7 @@ def test_amend_while_pending_rejected(setup):
     run(runtime, quote, pending=True)
     intent["revision"] = 2
     with pytest.raises(ProtocolError, match="state_conflict"):
-        runtime.journal.amend(intent)
+        runtime.journal.amend(intent, approval_method="test-user-confirmation")
 
 
 def test_expired_intent_before_dispatch(setup, clock):
@@ -265,3 +266,103 @@ def test_expired_intent_before_dispatch(setup, clock):
 def test_operation_identifiers_are_random():
     ids = {new_operation_id() for _ in range(1000)}
     assert len(ids) == 1000 and all(len(i) == 22 for i in ids)  # 16 bytes, base64url.
+
+
+def test_intent_revisions_are_retained(setup, validator, clock):
+    runtime, intent, _ = setup
+    changed = deepcopy(intent)
+    changed["revision"] = 2
+    changed["constraints"]["max_total"]["amount_minor"] = 40000
+    runtime.journal.amend(changed, approval_method="test-user-confirmation")
+    restarted = Journal(runtime.journal.path, validator, clock)
+    with restarted.connect() as db:
+        rows = db.execute("SELECT body FROM intent_revisions WHERE intent_id=? ORDER BY revision",
+                          (intent["id"],)).fetchall()
+    assert [json.loads(row["body"]) for row in rows] == [intent, changed]
+    assert restarted.intent("i7") == (changed, False)
+
+
+def test_approval_metadata_is_not_overwritten(setup, validator, clock):
+    runtime, intent, _ = setup
+    approved_at = clock()
+    clock.now += 10
+    runtime.journal.approve(intent, approval_method="different-confirmation-path")
+    changed = deepcopy(intent)
+    changed["revision"] = 2
+    runtime.journal.amend(changed, approval_method="settings-confirmation")
+    restarted = Journal(runtime.journal.path, validator, clock)
+    with restarted.connect() as db:
+        rows = db.execute("SELECT revision,approved_at,approval_method FROM intent_revisions "
+                          "WHERE intent_id='i7' ORDER BY revision").fetchall()
+    assert [tuple(row) for row in rows] == [
+        (1, approved_at, "test-user-confirmation"),
+        (2, clock(), "settings-confirmation"),
+    ]
+
+
+@pytest.mark.parametrize("method", [None, "", "contains spaces", "x" * 129, 123])
+def test_invalid_approval_method_changes_nothing(tmp_path, validator, clock, method):
+    journal = Journal(tmp_path / "journal.sqlite", validator, clock)
+    intent = load("valid/intent.json")
+    with pytest.raises(ProtocolError, match="invalid_message"):
+        journal.approve(intent, approval_method=method)
+    with journal.connect() as db:
+        assert db.execute("SELECT count(*) FROM intents").fetchone()[0] == 0
+        assert db.execute("SELECT count(*) FROM intent_revisions").fetchone()[0] == 0
+
+
+def test_rejected_amendment_leaves_history_unchanged(setup):
+    runtime, intent, quote = setup
+    run(runtime, quote, pending=True)
+    changed = deepcopy(intent)
+    changed["revision"] = 2
+    with pytest.raises(ProtocolError, match="state_conflict"):
+        runtime.journal.amend(changed, approval_method="test-user-confirmation")
+    with runtime.journal.connect() as db:
+        bodies = [json.loads(row["body"]) for row in db.execute("SELECT body FROM intent_revisions")]
+    assert bodies == [intent]
+    assert runtime.journal.intent("i7") == (intent, False)
+
+
+def test_legacy_journal_keeps_current_revision_and_reservation(tmp_path, validator, clock):
+    path = tmp_path / "old.sqlite"
+    intent = load("valid/intent.json")
+    intent["revision"] = 2  # The older implementation already discarded revision 1.
+    payload = deepcopy(PAYLOAD)
+    payload["intent_revision"] = 2
+    db = sqlite3.connect(path)
+    db.executescript("""
+        CREATE TABLE intents(id TEXT PRIMARY KEY, body TEXT NOT NULL, cancelled INTEGER NOT NULL DEFAULT 0);
+        CREATE TABLE operations(id TEXT PRIMARY KEY, intent_id TEXT NOT NULL, payload TEXT NOT NULL,
+            amount INTEGER NOT NULL, status TEXT NOT NULL, binding TEXT NOT NULL);
+        CREATE TABLE audit(n INTEGER PRIMARY KEY, operation_id TEXT, status TEXT NOT NULL);
+    """)
+    db.execute("INSERT INTO intents VALUES(?,?,1)", ("i7", json.dumps(intent)))
+    db.execute("INSERT INTO operations VALUES(?,?,?,?,?,?)",
+               ("op1", "i7", json.dumps(payload), 33399, "unknown", "|".join(BINDING)))
+    db.execute("INSERT INTO audit(operation_id,status) VALUES('op1','unknown')")
+    db.commit()
+    db.close()
+    Journal(path, validator, clock)
+    restarted = Journal(path, validator, clock)
+    with restarted.connect() as db:
+        rows = db.execute("SELECT * FROM intent_revisions").fetchall()
+        assert len(rows) == 1 and rows[0]["revision"] == 2
+        assert json.loads(rows[0]["body"]) == intent
+        assert rows[0]["approved_at"] is None and rows[0]["approval_method"] is None
+        assert db.execute("SELECT status FROM audit").fetchone()[0] == "unknown"
+    assert restarted.intent("i7") == (intent, True)
+    assert restarted.operation("op1")["payload"] == payload
+    assert restarted.held("i7") == 33399
+
+
+def test_cancel_records_outcome(setup):
+    runtime, _, _ = setup
+    runtime.journal.reserve("op1", PAYLOAD)
+    runtime.journal.cancel("i7")
+    runtime.journal.cancel("i7")
+    with runtime.journal.connect() as db:
+        states = [row["status"] for row in db.execute(
+            "SELECT status FROM audit WHERE operation_id='op1' ORDER BY n")]
+    assert states == ["not_started", "cancelled"]
+    assert runtime.journal.held("i7") == 0

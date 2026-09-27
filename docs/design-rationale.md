@@ -47,8 +47,11 @@ comparable, and a ranking the client cannot check invites paid placement.
 
 Before a runtime tells the user that a candidate fits, or acts on it, it fetches the
 resource from the publisher and evaluates every hard constraint again. That includes
-constraints the runtime kept to itself for privacy. A changed price makes the candidate
-ineligible; the runtime does not relax the limit to keep it.
+constraints the runtime kept to itself for privacy. A candidate whose current facts
+break a constraint, for example a price now above the limit, is ineligible; the runtime
+does not relax the limit to keep it. A price change within the limits is not an error.
+The amount the user pays is fixed later by the quote, which the checkout service must
+match exactly.
 
 This costs one request per candidate the user actually sees. It is the main way ADDP
 deals with stale indexes, and the draft lists "does it catch enough to be worth it" as
@@ -153,7 +156,9 @@ In the synthetic measurement in [measurements.md](measurements.md), switching th
 data from JSON to CSV saved about 36% of tokens, while the decision view was about 7
 times smaller than the compact JSON response. Most of the saving comes from the runtime
 doing filtering and ranking, not from a better format. Whether models decide equally
-well with the smaller view has not been tested.
+well with the smaller view has not been tested. How a typed decision model, rather than
+a text-generating one, would take the decision view is described in
+[model-integration.md](model-integration.md).
 
 *Rejected:* a special compressed language for agents. It saves less than not sending
 the data at all, costs interoperability, and makes messages harder to debug.

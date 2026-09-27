@@ -120,7 +120,21 @@ before spending the user's money. That is the part ADDP is an experiment about.
 
 ## Not yet reviewed
 
-MCP and WebMCP, the Agentic Commerce Protocol (ACP), AP2, Web Bot Auth, llms.txt and
-schema.org Actions were discussed while the design was drafted but not checked against
-their current specifications. Claims about them do not appear in the draft for that
-reason.
+The works below were discussed while the design was drafted but have not been checked
+against their current specifications, so the draft makes no claims about them. They are
+listed in the order they should be reviewed, with the question each review has to
+answer.
+
+| Work | Area | Question for ADDP |
+|---|---|---|
+| Agentic Commerce Protocol (ACP) | Checkout between agents and merchants | Can an ACP checkout meet the four binding requirements (reject an operation that does not match the quote, record one outcome per identifier including rejections, answer status requests, enforce its own authorization)? If so, ADDP should define an ACP execution binding rather than its own execution objects. |
+| AP2 | Payments started by agents | Does its record of the user's authorization cover what an ADDP intent records (target, limits, expiry, approved capability digest)? Could an intent be expressed as that record or linked to it? |
+| MCP and WebMCP | Tools that models call, on servers and in web pages | Can a query endpoint or an execution binding be offered as a tool without losing the guarantees? How much do tool definitions add to the model's input? Is "not a tool-calling interface" the right boundary? |
+| Web Bot Auth | Identifying automated clients to websites | Should indexes and runtimes use it when fetching feeds and resources? Can publishers use it for rate limits and indexes for binding cursors to clients? |
+| schema.org Actions | Actions described in page markup | Do capability documents duplicate it? Can `offer-search/0.1` facts map to schema.org Offer properties without changing their meaning? |
+| llms.txt | Site content prepared for language models | Does it overlap with the manifest or feeds at all, or only with documentation? |
+
+ACP and AP2 come first: they bear on the first open question in the draft, whether the
+runtime profile should exist on its own or become a profile of existing protocols. Each
+review adds a section under "Checked" with the version, date and sources, a row in the
+summary table, and, where the answer changes the design, an issue against the draft.

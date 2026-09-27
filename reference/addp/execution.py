@@ -59,22 +59,40 @@ class Journal(Database):
                 CREATE TABLE IF NOT EXISTS operations(id TEXT PRIMARY KEY, intent_id TEXT NOT NULL,
                     payload TEXT NOT NULL, amount INTEGER NOT NULL, status TEXT NOT NULL, binding TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS audit(n INTEGER PRIMARY KEY, operation_id TEXT, status TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS intent_revisions(intent_id TEXT NOT NULL, revision INTEGER NOT NULL,
+                    body TEXT NOT NULL, approved_at REAL, approval_method TEXT,
+                    PRIMARY KEY(intent_id, revision));
             """)
+        with self.connect(write=True) as db:
+            # Old journals retain only the current revision; its approval metadata is unknown.
+            for row in db.execute("SELECT id,body FROM intents").fetchall():
+                revision = json.loads(row["body"])["revision"]
+                db.execute("INSERT OR IGNORE INTO intent_revisions VALUES(?,?,?,NULL,NULL)",
+                           (row["id"], revision, row["body"]))
 
-    def approve(self, intent):
-        """Record the user's approval. A host API; never exposed to a model."""
+    def _check_approval(self, intent, approval_method):
         self.validator.check("intent", intent)
-        require(timestamp(intent["expires_at"]) > self.clock(), "forbidden")
+        approved_at = self.clock()
+        require(timestamp(intent["expires_at"]) > approved_at, "forbidden")
+        require(isinstance(approval_method, str) and 1 <= len(approval_method) <= 128 and
+                approval_method.isascii() and all(c.isalnum() or c in "._-" for c in approval_method),
+                detail="approval_method must be a non-secret method label")
+        return approved_at
+
+    def approve(self, intent, *, approval_method):
+        """Trusted host API: record approval with a non-secret label, never a credential."""
+        approved_at = self._check_approval(intent, approval_method)
         with self.connect(write=True) as db:
             old = db.execute("SELECT body FROM intents WHERE id=?", (intent["id"],)).fetchone()
             if old:
                 require(old["body"] == canonical(intent), "state_conflict", "use amend for a new revision")
                 return
             db.execute("INSERT INTO intents(id,body) VALUES(?,?)", (intent["id"], canonical(intent)))
+            db.execute("INSERT INTO intent_revisions VALUES(?,?,?,?,?)",
+                       (intent["id"], intent["revision"], canonical(intent), approved_at, approval_method))
 
-    def amend(self, intent):
-        self.validator.check("intent", intent)
-        require(timestamp(intent["expires_at"]) > self.clock(), "forbidden")
+    def amend(self, intent, *, approval_method):
+        approved_at = self._check_approval(intent, approval_method)
         with self.connect(write=True) as db:
             old = db.execute("SELECT * FROM intents WHERE id=?", (intent["id"],)).fetchone()
             require(old and not old["cancelled"], "forbidden")
@@ -86,6 +104,8 @@ class Journal(Database):
             require(all(o["status"] in TERMINAL for o in operations), "state_conflict", "unresolved operation")
             spent = sum(o["amount"] for o in operations if o["status"] == "succeeded")
             require(spent <= intent["constraints"]["max_total"]["amount_minor"], "constraint_failed")
+            db.execute("INSERT INTO intent_revisions VALUES(?,?,?,?,?)",
+                       (intent["id"], intent["revision"], canonical(intent), approved_at, approval_method))
             db.execute("UPDATE intents SET body=? WHERE id=?", (canonical(intent), intent["id"]))
 
     def intent(self, identifier):
@@ -163,6 +183,8 @@ class Journal(Database):
             require(db.execute("SELECT id FROM intents WHERE id=?", (identifier,)).fetchone(), "not_found")
             db.execute("UPDATE intents SET cancelled=1 WHERE id=?", (identifier,))
             # Operations that may have been sent keep their reservation.
+            db.execute("INSERT INTO audit(operation_id,status) SELECT id,'cancelled' FROM operations "
+                       "WHERE intent_id=? AND status='not_started'", (identifier,))
             db.execute("UPDATE operations SET status='cancelled' WHERE intent_id=? AND status='not_started'",
                        (identifier,))
 

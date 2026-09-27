@@ -8,9 +8,12 @@ ADDP is an experimental draft. The most useful contributions right now are:
 - **Evidence.** A second implementation of any role, an adapter for an existing
   catalog or checkout protocol, or task-level measurements of the model views. The
   experiment in the draft (section "What the Experiment Should Show") cannot succeed
-  without them.
+  without them. A decision-model adapter measured as described in
+  [docs/model-integration.md](docs/model-integration.md) counts too.
 - **Prior art we missed.** If something already does part of this, say where and how
-  far the overlap goes.
+  far the overlap goes. [docs/prior-art.md](docs/prior-art.md#not-yet-reviewed) lists
+  works that have not been checked yet (ACP, AP2, MCP and WebMCP, Web Bot Auth,
+  schema.org Actions, llms.txt), each with the question a review has to answer.
 
 ## Changing the specification
 
