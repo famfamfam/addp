@@ -1,3 +1,5 @@
+**English** | [Русский](README.ru.md) | [Español](README.es.md) | [Português](README.pt-BR.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md)
+
 # ADDP: Agent Discovery and Delegation Protocol
 
 ADDP is an open protocol for AI agents that buy, book or order things for people. It
