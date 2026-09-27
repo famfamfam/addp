@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/operation.json",
+  "type": "object",
+  "properties": {
+    "intent_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "intent_revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "quote_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "quote_revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "session": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "ref": {
+      "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/ref.json"
+    },
+    "quantity": {
+      "const": 1
+    },
+    "total": {
+      "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/money.json"
+    },
+    "capability_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "intent_id",
+    "intent_revision",
+    "quote_id",
+    "quote_revision",
+    "session",
+    "ref",
+    "quantity",
+    "total",
+    "capability_digest"
+  ],
+  "additionalProperties": false
+}

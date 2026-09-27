@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/quote.json",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "revision": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "session": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "ref": {
+      "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/ref.json"
+    },
+    "quantity": {
+      "const": 1
+    },
+    "total": {
+      "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/money.json"
+    },
+    "total_scope": {
+      "const": "merchant_total"
+    },
+    "capability_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "extensions": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": {
+        "format": "uri"
+      }
+    },
+    "critical_extensions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "minItems": 0,
+      "maxItems": 32,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "version",
+    "id",
+    "revision",
+    "session",
+    "ref",
+    "quantity",
+    "total",
+    "total_scope",
+    "capability_digest",
+    "expires_at"
+  ],
+  "additionalProperties": false
+}

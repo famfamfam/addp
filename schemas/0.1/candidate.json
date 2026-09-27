@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/candidate.json",
+  "type": "object",
+  "properties": {
+    "ref": {
+      "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/ref.json"
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "source_revision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "retrieved_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "indexed_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "valid_until": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "Z$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "facts": {
+      "type": "object",
+      "maxProperties": 64
+    },
+    "paid_inclusion": {
+      "enum": [
+        "yes",
+        "no",
+        "unknown"
+      ]
+    }
+  },
+  "required": [
+    "ref",
+    "type",
+    "profile",
+    "source_revision",
+    "retrieved_at",
+    "indexed_at",
+    "valid_until",
+    "facts",
+    "paid_inclusion"
+  ],
+  "additionalProperties": false
+}

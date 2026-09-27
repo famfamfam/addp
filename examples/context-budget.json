@@ -1,0 +1,453 @@
+{
+  "query": {
+    "version": "0.1",
+    "profile": "offer-search/0.1",
+    "text": {
+      "mode": "lexical",
+      "value": "Sony WH-1000XM6"
+    },
+    "where": [
+      {
+        "field": "currency",
+        "op": "eq",
+        "value": "EUR"
+      },
+      {
+        "field": "condition",
+        "op": "eq",
+        "value": "new"
+      }
+    ],
+    "select": [
+      "name",
+      "unit_price_minor",
+      "currency",
+      "condition",
+      "colour",
+      "availability"
+    ],
+    "limit": 100
+  },
+  "result": {
+    "version": "0.1",
+    "snapshot": "Qm7cX2pL9aR4tZ0e",
+    "items": [
+      {
+        "ref": {
+          "publisher": "https://shop1.example",
+          "namespace": "addp",
+          "id": "https://shop1.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r1",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30075,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop11.example",
+          "namespace": "addp",
+          "id": "https://shop11.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r11",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 31825,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop12.example",
+          "namespace": "addp",
+          "id": "https://shop12.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r12",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 32000,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "silver",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop13.example",
+          "namespace": "addp",
+          "id": "https://shop13.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r13",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 32175,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop14.example",
+          "namespace": "addp",
+          "id": "https://shop14.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r14",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 32350,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop16.example",
+          "namespace": "addp",
+          "id": "https://shop16.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r16",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 32700,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "silver",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop17.example",
+          "namespace": "addp",
+          "id": "https://shop17.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r17",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 32875,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop18.example",
+          "namespace": "addp",
+          "id": "https://shop18.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r18",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 33050,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop19.example",
+          "namespace": "addp",
+          "id": "https://shop19.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r19",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 33225,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop2.example",
+          "namespace": "addp",
+          "id": "https://shop2.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r2",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30250,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop3.example",
+          "namespace": "addp",
+          "id": "https://shop3.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r3",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30425,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop4.example",
+          "namespace": "addp",
+          "id": "https://shop4.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r4",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30600,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "silver",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop6.example",
+          "namespace": "addp",
+          "id": "https://shop6.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r6",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30950,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop7.example",
+          "namespace": "addp",
+          "id": "https://shop7.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r7",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 31125,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop8.example",
+          "namespace": "addp",
+          "id": "https://shop8.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r8",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 31300,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "silver",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      },
+      {
+        "ref": {
+          "publisher": "https://shop9.example",
+          "namespace": "addp",
+          "id": "https://shop9.example/addp/resources/offer-17"
+        },
+        "type": "https://schema.org/Offer",
+        "profile": "offer-search/0.1",
+        "source_revision": "r9",
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "indexed_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 31475,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "paid_inclusion": "unknown"
+      }
+    ],
+    "next_cursor": null
+  },
+  "decision_view": {
+    "evidence": "index_claims",
+    "coverage": "configured_indexes_only",
+    "sources": {
+      "index-A": "ok"
+    },
+    "unresolved": [
+      "max_total"
+    ],
+    "items": [
+      {
+        "handle": "a1b2:r1",
+        "publisher": "https://shop1.example",
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30075,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "paid_inclusion": "unknown",
+        "price_basis": "item_only",
+        "delivered_total": "unknown"
+      },
+      {
+        "handle": "a1b2:r2",
+        "publisher": "https://shop2.example",
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30250,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "paid_inclusion": "unknown",
+        "price_basis": "item_only",
+        "delivered_total": "unknown"
+      },
+      {
+        "handle": "a1b2:r3",
+        "publisher": "https://shop3.example",
+        "facts": {
+          "name": "Sony WH-1000XM6",
+          "unit_price_minor": 30425,
+          "currency": "EUR",
+          "condition": "new",
+          "colour": "black",
+          "availability": "in_stock"
+        },
+        "retrieved_at": "2030-01-01T00:00:00Z",
+        "valid_until": null,
+        "paid_inclusion": "unknown",
+        "price_basis": "item_only",
+        "delivered_total": "unknown"
+      }
+    ]
+  }
+}

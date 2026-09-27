@@ -1,0 +1,31 @@
+=============== NOTE: '\' line wrapping per RFC 8792 ================
+
+{
+  "version": "0.1",
+  "id": "i7",
+  "revision": 1,
+  "profile": "sandbox-purchase/0.1",
+  "target": {
+    "ref": {
+      "publisher": "https://shop.example",
+      "namespace": "addp",
+      "id": "https://shop.example/addp/resources/o17"
+    },
+    "quantity": 1
+  },
+  "constraints": {
+    "max_total": {
+      "amount_minor": 35000,
+      "currency": "EUR"
+    },
+    "max_count": 1
+  },
+  "permissions": {
+    "purchase": true,
+    "substitution": false,
+    "recurring": false
+  },
+  "capability_digest": "4f47a5fea0d7ad71540ff2d7f0c5d1f4bcbda629057e\
+9837b6c02aab98be2c38",
+  "expires_at": "2030-01-02T00:00:00Z"
+}

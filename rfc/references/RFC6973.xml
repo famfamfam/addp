@@ -1,0 +1,18 @@
+<reference anchor="RFC6973" target="https://www.rfc-editor.org/info/rfc6973">
+  <front>
+    <title>Privacy Considerations for Internet Protocols</title>
+    <author fullname="A. Cooper" initials="A." surname="Cooper"/>
+    <author fullname="H. Tschofenig" initials="H." surname="Tschofenig"/>
+    <author fullname="B. Aboba" initials="B." surname="Aboba"/>
+    <author fullname="J. Peterson" initials="J." surname="Peterson"/>
+    <author fullname="J. Morris" initials="J." surname="Morris"/>
+    <author fullname="M. Hansen" initials="M." surname="Hansen"/>
+    <author fullname="R. Smith" initials="R." surname="Smith"/>
+    <date month="July" year="2013"/>
+    <abstract>
+      <t>This document offers guidance for developing privacy considerations for inclusion in protocol specifications. It aims to make designers, implementers, and users of Internet protocols aware of privacy-related design choices. It suggests that whether any individual RFC warrants a specific privacy considerations section will depend on the document's content.</t>
+    </abstract>
+  </front>
+  <seriesInfo name="RFC" value="6973"/>
+  <seriesInfo name="DOI" value="10.17487/RFC6973"/>
+</reference>

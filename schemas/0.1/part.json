@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/part.json",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "0.1"
+    },
+    "epoch": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "snapshot_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "through": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "resources": {
+      "type": "array",
+      "items": {
+        "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/resource.json"
+      },
+      "minItems": 0,
+      "maxItems": 10000
+    },
+    "extensions": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": {
+        "format": "uri"
+      }
+    },
+    "critical_extensions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "minItems": 0,
+      "maxItems": 32,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "version",
+    "epoch",
+    "snapshot_id",
+    "through",
+    "resources"
+  ],
+  "additionalProperties": false
+}

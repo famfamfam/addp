@@ -1,0 +1,26 @@
+{
+  "schema": "query",
+  "instance": {
+    "version": "0.1",
+    "profile": "offer-search/0.1",
+    "text": {
+      "mode": "lexical",
+      "value": "Sony WH-1000XM6"
+    },
+    "where": [
+      {
+        "field": "unit_price_minor",
+        "op": "lte",
+        "value": 35000
+      }
+    ],
+    "select": [
+      "name",
+      "unit_price_minor",
+      "currency",
+      "condition"
+    ],
+    "limit": 5
+  },
+  "error": "unsupported_query"
+}

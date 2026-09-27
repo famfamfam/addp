@@ -1,0 +1,41 @@
+{
+  "schema": "query",
+  "instance": {
+    "version": "0.1",
+    "profile": "offer-search/0.1",
+    "text": {
+      "mode": "lexical",
+      "value": "Sony WH-1000XM6"
+    },
+    "where": [
+      {
+        "field": "currency",
+        "op": "eq",
+        "value": "EUR"
+      },
+      {
+        "field": "unit_price_minor",
+        "op": "lte",
+        "value": 35000
+      },
+      {
+        "field": "condition",
+        "op": "eq",
+        "value": "new"
+      },
+      {
+        "field": "ships_to",
+        "op": "eq",
+        "value": "DE"
+      }
+    ],
+    "select": [
+      "name",
+      "unit_price_minor",
+      "currency",
+      "condition"
+    ],
+    "limit": 5
+  },
+  "error": "unsupported_query"
+}

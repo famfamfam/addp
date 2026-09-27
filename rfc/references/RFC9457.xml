@@ -1,0 +1,15 @@
+<reference anchor="RFC9457" target="https://www.rfc-editor.org/info/rfc9457">
+  <front>
+    <title>Problem Details for HTTP APIs</title>
+    <author fullname="M. Nottingham" initials="M." surname="Nottingham"/>
+    <author fullname="E. Wilde" initials="E." surname="Wilde"/>
+    <author fullname="S. Dalal" initials="S." surname="Dalal"/>
+    <date month="July" year="2023"/>
+    <abstract>
+      <t>This document defines a "problem detail" to carry machine-readable details of errors in HTTP response content to avoid the need to define new error response formats for HTTP APIs.</t>
+      <t>This document obsoletes RFC 7807.</t>
+    </abstract>
+  </front>
+  <seriesInfo name="RFC" value="9457"/>
+  <seriesInfo name="DOI" value="10.17487/RFC9457"/>
+</reference>

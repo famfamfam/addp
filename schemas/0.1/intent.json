@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/intent.json",
+  "type": "object",
+  "properties": {
+    "version": {
+      "const": "0.1"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "profile": {
+      "const": "sandbox-purchase/0.1"
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "ref": {
+          "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/ref.json"
+        },
+        "quantity": {
+          "const": 1
+        }
+      },
+      "required": [
+        "ref",
+        "quantity"
+      ],
+      "additionalProperties": false
+    },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "max_total": {
+          "$ref": "https://raw.githubusercontent.com/famfamfam/addp/main/schemas/0.1/money.json"
+        },
+        "max_count": {
+          "const": 1
+        }
+      },
+      "required": [
+        "max_total",
+        "max_count"
+      ],
+      "additionalProperties": false
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "purchase": {
+          "type": "boolean"
+        },
+        "substitution": {
+          "const": false
+        },
+        "recurring": {
+          "const": false
+        }
+      },
+      "required": [
+        "purchase",
+        "substitution",
+        "recurring"
+      ],
+      "additionalProperties": false
+    },
+    "capability_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "extensions": {
+      "type": "object",
+      "maxProperties": 32,
+      "propertyNames": {
+        "format": "uri"
+      }
+    },
+    "critical_extensions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "minItems": 0,
+      "maxItems": 32,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "version",
+    "id",
+    "revision",
+    "profile",
+    "target",
+    "constraints",
+    "permissions",
+    "capability_digest",
+    "expires_at"
+  ],
+  "additionalProperties": false
+}

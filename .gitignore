@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+.pytest_cache/
+build/
+*.pyc
+*.sqlite*
+tracker.log
+notes/

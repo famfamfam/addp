@@ -1,0 +1,46 @@
+name: checks
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Install
+        run: python -m pip install -r requirements-dev.txt
+
+      - name: Generated files are committed and up to date
+        run: |
+          python tools/generate_schemas.py
+          python tools/generate_examples.py
+          python tools/build_draft.py --examples-only
+          python tools/measure_context.py --download
+          git diff --exit-code
+
+      - name: Tests
+        run: python -m pytest
+
+      - name: Render the draft
+        run: python tools/build_draft.py
+
+      - name: idnits
+        run: |
+          curl -sSfL -o idnits https://raw.githubusercontent.com/ietf-tools/idnits/main/idnits
+          bash idnits build/draft-kibin-addp-00.txt | tee idnits.log
+          grep -q ' 0 errors (\*\*), 0 flaws' idnits.log
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: draft
+          path: build/draft-kibin-addp-00.*

@@ -1,0 +1,1602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc [
+  <!ENTITY nbsp "&#160;">
+]>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+     version="3"
+     category="exp"
+     docName="draft-kibin-addp-00"
+     ipr="trust200902"
+     submissionType="IETF"
+     consensus="true"
+     sortRefs="true"
+     symRefs="true"
+     tocInclude="true">
+
+<front>
+  <title abbrev="ADDP">Agent Discovery and Delegation Protocol (ADDP)</title>
+  <seriesInfo name="Internet-Draft" value="draft-kibin-addp-00"/>
+
+  <author fullname="Aleksandr Kibin" initials="A." surname="Kibin">
+    <organization>Independent</organization>
+    <address>
+      <uri>https://github.com/famfamfam</uri>
+    </address>
+  </author>
+
+  <date/>
+  <area>Applications and Real-Time</area>
+  <keyword>agents</keyword>
+  <keyword>discovery</keyword>
+  <keyword>delegation</keyword>
+  <keyword>user agent</keyword>
+
+  <abstract>
+    <t>This document specifies the Agent Discovery and Delegation Protocol
+    (ADDP), an experimental protocol for software agents that act for a
+    user on the Web. It lets an agent find resources published by Web
+    origins, such as product offers, through indexes; check what an index
+    says about a resource against the origin that published it; and carry
+    out a narrow set of actions within limits the user approved. ADDP
+    defines a manifest at a well-known location, a resource representation,
+    a snapshot and change feed, a small typed query language for indexes,
+    and the records indexes return. An optional runtime profile states what
+    an agent must check before an action with side effects, how it recovers
+    when the outcome of such an action is unknown, and what it shows to a
+    language model. ADDP does not define an authorization protocol, a
+    payment protocol, or a model tool interface.</t>
+  </abstract>
+</front>
+
+<middle>
+
+<section anchor="intro">
+  <name>Introduction</name>
+
+  <t>Software agents that act for people on the Web, often driven by a
+  language model, mostly work in one of two ways today. They read pages
+  built for humans, or they call tools that one site exposes. Neither gives
+  an agent a way to answer three questions that come up in almost any task
+  that spans more than one site: where can this thing be found, is what I
+  was told about it still true, and am I allowed to act on it within the
+  limits the user set.</t>
+
+  <t>Parts of this are covered by existing work, which ADDP reuses rather
+  than replaces (<xref target="related"/>). The Universal Commerce Protocol
+  <xref target="UCP"/> lets a business describe its services at
+  <tt>/.well-known/ucp</tt> and defines catalog search for that business.
+  Agentic Resource Discovery <xref target="ARD"/> and A2A agent cards
+  <xref target="A2A"/> let agents find tools, APIs and other agents. OAuth
+  2.0 <xref target="RFC9396"/> <xref target="RFC8693"/>
+  <xref target="RFC9728"/> covers authorization.</t>
+
+  <t>Two things appear to be missing, and this document is an experiment to
+  find out whether they are worth standardizing:</t>
+
+  <ol>
+    <li>A feed and query contract that lets an index collect resources, such
+    as offers, from many publishers with defined consistency, and answer
+    structured queries over them with defined semantics. Without it, two
+    indexes given the same data can return different answers and neither is
+    wrong.</li>
+    <li>A stated set of checks that separates what a model proposes from
+    what an agent actually does. Without it, "the model decided to buy"
+    cannot be told apart from "the user authorized a purchase".</li>
+  </ol>
+
+  <t>Despite its name, ADDP is not a protocol for discovering agents. The
+  agent does the discovering: it discovers resources, and the user
+  delegates actions on them to it.</t>
+
+  <section anchor="scope">
+    <name>Scope</name>
+    <t>In scope:</t>
+    <ul>
+      <li>Publisher metadata at a well-known URI.</li>
+      <li>Resource representation and resolution at the publisher.</li>
+      <li>Snapshot and change feeds from publishers to indexes.</li>
+      <li>A query and result format for indexes.</li>
+      <li>Capability documents that name an execution protocol.</li>
+      <li>An optional profile for agents that perform actions with side
+      effects (<xref target="runtime"/>).</li>
+      <li>Rules for what such an agent shows to a language model
+      (<xref target="projections"/>).</li>
+    </ul>
+    <t>Out of scope:</t>
+    <ul>
+      <li>Discovery of agents, tools and APIs.</li>
+      <li>An interface by which a model calls tools.</li>
+      <li>Authentication and authorization protocols.</li>
+      <li>Payment protocols.</li>
+      <li>Relevance ranking. Indexes filter; agents rank.</li>
+      <li>A universal vocabulary for products, flights, or other
+      domains.</li>
+      <li>Replacing UCP for businesses that already implement it
+      (<xref target="ucp-adapter"/>).</li>
+    </ul>
+  </section>
+
+  <section anchor="experiment">
+    <name>What the Experiment Should Show</name>
+    <t>This document is intended for Experimental status. The experiment
+    succeeds if the following can be shown. If they cannot, the useful
+    parts of ADDP should become profiles of existing protocols instead.</t>
+    <ol>
+      <li>Two independent index implementations that consume the same feeds
+      return the same result sets for the same queries.</li>
+      <li>Resolution (<xref target="reevaluation"/>) catches index claims
+      that are stale often enough to justify its cost.</li>
+      <li>At least one execution protocol in real use can meet the
+      requirements in <xref target="binding-reqs"/>. Only a sandbox binding
+      exists today (<xref target="sandbox"/>).</li>
+      <li>The views in <xref target="projections"/> reduce the tokens a
+      model consumes per completed task without lowering the rate at which
+      tasks are completed correctly, measured on named models.</li>
+    </ol>
+  </section>
+</section>
+
+<section anchor="terms">
+  <name>Conventions and Terminology</name>
+  <t>The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>",
+  "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>",
+  "<bcp14>SHALL NOT</bcp14>", "<bcp14>SHOULD</bcp14>",
+  "<bcp14>SHOULD NOT</bcp14>", "<bcp14>RECOMMENDED</bcp14>",
+  "<bcp14>NOT RECOMMENDED</bcp14>", "<bcp14>MAY</bcp14>", and
+  "<bcp14>OPTIONAL</bcp14>" in this document are to be interpreted as
+  described in BCP&nbsp;14 <xref target="RFC2119"/>
+  <xref target="RFC8174"/> when, and only when, they appear in all
+  capitals, as shown here.</t>
+
+  <dl newline="false" spacing="normal">
+    <dt>Publisher:</dt>
+    <dd>An origin <xref target="RFC6454"/> that publishes resources and,
+    optionally, a feed.</dd>
+    <dt>Index:</dt>
+    <dd>A service that collects resources from publishers and answers
+    queries about them.</dd>
+    <dt>Runtime:</dt>
+    <dd>The part of an agent that performs discovery and, if it implements
+    <xref target="runtime"/>, actions. It holds credentials and enforces the
+    user's limits. The user trusts it.</dd>
+    <dt>Model:</dt>
+    <dd>A language model that reads data and proposes what to do next. The
+    runtime treats its output as untrusted input.</dd>
+    <dt>Resource:</dt>
+    <dd>Something a publisher describes, identified by a resource
+    reference. In this document a resource is an item such as an offer, not
+    a tool or an agent.</dd>
+    <dt>Resource reference:</dt>
+    <dd>The triple (publisher, namespace, id) defined in
+    <xref target="refs"/>.</dd>
+    <dt>Resource profile:</dt>
+    <dd>A named set of rules that gives the <tt>facts</tt> of a resource a
+    meaning and says which query predicates apply to them
+    (<xref target="profiles"/>).</dd>
+    <dt>Operation profile:</dt>
+    <dd>A named set of rules for one kind of action, used by capability
+    documents and intents (<xref target="capabilities"/>).</dd>
+    <dt>Claim:</dt>
+    <dd>A statement made by a publisher or an index. Claims are inputs to
+    decisions; they are never authorization.</dd>
+    <dt>Candidate:</dt>
+    <dd>An index's claim about a resource, returned in answer to a
+    query.</dd>
+    <dt>Hard constraint:</dt>
+    <dd>A condition the user requires, such as a maximum price. A resource
+    that does not demonstrably meet a hard constraint does not meet it.</dd>
+    <dt>Capability:</dt>
+    <dd>A document that describes an operation on a resource and names the
+    protocol that performs it.</dd>
+    <dt>Execution binding:</dt>
+    <dd>Code in the runtime, installed by the runtime's operator, that
+    performs one operation of one version of one execution protocol.</dd>
+    <dt>Intent, quote, operation:</dt>
+    <dd>Objects of the runtime profile, defined in
+    <xref target="runtime"/>.</dd>
+  </dl>
+</section>
+
+<section anchor="overview">
+  <name>Protocol Overview</name>
+  <figure anchor="fig-flow">
+    <name>Message Flow</name>
+    <artwork type="ascii-art"><![CDATA[
+ Publisher            Index              Runtime           Model
+    |                   |                   |                 |
+    |<-- manifest, feed-|  (pull)           |                 |
+    |                   |<----- query ------|                 |
+    |                   |--- candidates --->|                 |
+    |                   |                   |---- view ------>|
+    |                   |                   |<-- proposal ----|
+    |<---------- resolve -------------------|                 |
+    |<------ execution binding (optional) --|                 |
+]]></artwork>
+  </figure>
+  <t>A publisher describes itself in a manifest and publishes resources,
+  usually through a feed. An index pulls feeds and answers queries with
+  candidates. A runtime queries one or more indexes it was configured to
+  use, ranks the candidates itself, and shows the model a small view of
+  them. When the model proposes to act on a candidate, the runtime first
+  resolves the resource at its publisher and checks it again. If the
+  runtime implements the runtime profile and the user has approved the
+  action, the runtime performs it through an execution binding.</t>
+  <t>Authority to act comes from two places only: the user's approval,
+  which the runtime records, and the authorization that the service
+  performing the action enforces. Nothing a publisher, an index, or a
+  model says adds to it.</t>
+</section>
+
+<section anchor="common">
+  <name>Common Rules</name>
+
+  <section anchor="json">
+    <name>HTTP and JSON</name>
+    <t>ADDP messages are exchanged over HTTPS. HTTP methods, status codes
+    and header fields have the meanings given in
+    <xref target="RFC9110"/>.</t>
+    <t>Every ADDP message is a JSON object <xref target="RFC8259"/> that is
+    also an I-JSON message <xref target="RFC7493"/>, encoded in UTF-8 and
+    sent with media type <tt>application/json</tt>. In particular, a
+    receiver <bcp14>MUST</bcp14> reject a message that contains duplicate
+    member names, invalid UTF-8, or unpaired surrogates. A receiver
+    <bcp14>MUST</bcp14> reject a message nested more than 32 levels
+    deep.</t>
+    <t>Members that this document defines as integers <bcp14>MUST</bcp14>
+    be written without a fraction or an exponent and <bcp14>MUST</bcp14> be
+    in the range 0 to 2^53-1. A receiver <bcp14>MUST</bcp14> reject
+    <tt>5.0</tt> or <tt>5e0</tt> where an integer is required.</t>
+  </section>
+
+  <section anchor="versioning">
+    <name>Versioning, Unknown Members, and Extensions</name>
+    <t>The manifest, resource, feed head, snapshot part, change list, query,
+    query response, capability document, intent and quote each have a
+    member <tt>version</tt> whose value is <tt>"0.1"</tt>. A receiver
+    <bcp14>MUST</bcp14> reject other values. These objects, and only these,
+    may also carry <tt>extensions</tt> and
+    <tt>critical_extensions</tt>.</t>
+    <t>Objects are closed. A receiver <bcp14>MUST</bcp14> reject a message
+    with a member this document does not define, with two exceptions. The
+    content of <tt>facts</tt> is defined by the resource profile
+    (<xref target="profiles"/>). The member <tt>extensions</tt> is an
+    object whose member names are absolute URIs <xref target="RFC3986"/>
+    without a fragment, and whose values are not constrained here.</t>
+    <t>The member <tt>critical_extensions</tt> is an array of extension
+    URIs. A receiver <bcp14>MUST</bcp14> reject a message that lists an
+    extension it does not implement. A receiver <bcp14>MAY</bcp14> ignore
+    extensions that are not listed as critical. An extension
+    <bcp14>MUST NOT</bcp14> change the identity of a resource, relax a
+    constraint, or grant authority, whether or not it is critical.</t>
+  </section>
+
+  <section anchor="origins-urls">
+    <name>Origins and URLs</name>
+    <t>An origin is serialized as in <xref target="RFC6454"/>: scheme
+    <tt>https</tt>, the host in lower case, and the port only if it is not
+    443. Host names <bcp14>MUST</bcp14> be ASCII; internationalized names
+    appear in A-label form.</t>
+    <t>Every URL in an ADDP message that a client fetches
+    <bcp14>MUST</bcp14> be an absolute <tt>https</tt> URL of at most 512
+    characters, without user information and without a fragment. Resource
+    types and extension names are absolute URIs that are compared but not
+    fetched. Receivers compare URLs and URIs as strings and
+    <bcp14>MUST NOT</bcp14> normalize them before comparison. Two URLs that
+    differ only in case, percent-encoding or a trailing slash are different
+    URLs.</t>
+  </section>
+
+  <section anchor="refs">
+    <name>Resource References</name>
+    <t>A resource reference is an object with three members, all
+    required:</t>
+    <dl newline="false" spacing="normal">
+      <dt><tt>publisher</tt>:</dt>
+      <dd>The serialized origin of the publisher.</dd>
+      <dt><tt>namespace</tt>:</dt>
+      <dd><tt>"addp"</tt> or <tt>"ucp.catalog"</tt>.</dd>
+      <dt><tt>id</tt>:</dt>
+      <dd>For <tt>"addp"</tt>, an https URL whose origin is
+      <tt>publisher</tt>; the resource is resolved by fetching it. For
+      <tt>"ucp.catalog"</tt>, a UCP catalog product or variant ID issued by
+      <tt>publisher</tt>; the resource is resolved through the adapter in
+      <xref target="ucp-adapter"/>.</dd>
+    </dl>
+    <t>Two references are equal when all three members are equal as
+    strings. A reference does not identify the same thing at another
+    publisher, even if the <tt>id</tt> happens to be the same.</t>
+  </section>
+
+  <section anchor="time-money">
+    <name>Time and Money</name>
+    <t>Timestamps are <xref target="RFC3339"/> date-time values in UTC of
+    the form <tt>YYYY-MM-DDTHH:MM:SSZ</tt>, optionally with a decimal
+    fraction of one to nine digits before the <tt>Z</tt>. A receiver
+    <bcp14>MUST</bcp14> reject other forms, including numeric UTC
+    offsets.</t>
+    <t>A monetary amount is an object with <tt>amount_minor</tt>, an
+    integer number of minor units, and <tt>currency</tt>, an ISO 4217
+    alphabetic code <xref target="ISO4217"/>. EUR 333.99 is
+    <tt>{"amount_minor": 33399, "currency": "EUR"}</tt>. A receiver
+    <bcp14>MUST</bcp14> reject an amount in a currency whose minor-unit
+    exponent it does not know. Amounts in different currencies are never
+    equal and never compare as greater or smaller; a comparison between them
+    fails. ADDP defines no conversion between currencies.</t>
+  </section>
+
+  <section anchor="limits">
+    <name>Size Limits</name>
+    <t>A message <bcp14>MUST NOT</bcp14> exceed 1 MiB after content
+    decoding. Arrays have the maximum lengths given where they are defined.
+    A receiver <bcp14>MUST</bcp14> reject a message that exceeds a limit and
+    <bcp14>MUST</bcp14> enforce the size limit while decoding, not
+    after.</t>
+  </section>
+
+  <section anchor="errors">
+    <name>Errors</name>
+    <t>Errors are problem details <xref target="RFC9457"/> sent with media
+    type <tt>application/problem+json</tt>. The <tt>type</tt> member is
+    <tt>about:blank</tt>, <tt>title</tt> is the reason phrase registered for
+    the status code, and an extension member <tt>code</tt> carries one of
+    the values below. A <tt>detail</tt> member is optional. It
+    <bcp14>MUST NOT</bcp14> contain credentials or internal state, and
+    receivers <bcp14>MUST</bcp14> treat it as untrusted text for display
+    only.</t>
+    <table anchor="tab-errors">
+      <name>Error Codes</name>
+      <thead>
+        <tr><th>code</th><th>HTTP status</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>invalid_message</td><td>400</td><td>Not a valid ADDP message</td></tr>
+        <tr><td>forbidden</td><td>403</td><td>Origin mismatch, disallowed address, or missing authority</td></tr>
+        <tr><td>not_found</td><td>404</td><td>The resource or object does not exist</td></tr>
+        <tr><td>method_not_allowed</td><td>405</td><td>Wrong HTTP method</td></tr>
+        <tr><td>state_conflict</td><td>409</td><td>Epoch, watermark, revision or quote does not match</td></tr>
+        <tr><td>cursor_expired</td><td>410</td><td>Cursor, snapshot or change history no longer available</td></tr>
+        <tr><td>limit_exceeded</td><td>413</td><td>A size or count limit was exceeded</td></tr>
+        <tr><td>unsupported_media_type</td><td>415</td><td>Wrong media type or content coding</td></tr>
+        <tr><td>unsupported_query</td><td>422</td><td>A predicate, operator, field or mode is not supported</td></tr>
+        <tr><td>unsupported_profile</td><td>422</td><td>The profile or execution binding is not supported</td></tr>
+        <tr><td>unsupported_extension</td><td>422</td><td>A critical extension is not implemented</td></tr>
+        <tr><td>constraint_failed</td><td>422</td><td>A hard constraint is not met</td></tr>
+        <tr><td>rate_limited</td><td>429</td><td>Too many requests</td></tr>
+        <tr><td>unavailable</td><td>503</td><td>Temporarily unavailable</td></tr>
+      </tbody>
+    </table>
+    <t>An example is in <xref target="ex-problem"/>.</t>
+  </section>
+
+  <section anchor="fetching">
+    <name>Fetching</name>
+    <t>Discovery requests are the requests a client makes to fetch
+    manifests, feeds, resources and capability documents, and to query
+    public indexes. The following applies to them.</t>
+    <ul>
+      <li>A client <bcp14>MUST NOT</bcp14> send cookies, an
+      <tt>Authorization</tt> header, a client certificate, or any other
+      per-user identifier.</li>
+      <li>A client <bcp14>MUST</bcp14> resolve the host name itself and
+      <bcp14>MUST NOT</bcp14> connect if any resolved address is not
+      globally routable, including loopback, private, link-local and unique
+      local addresses and IPv4-mapped forms of them. It <bcp14>MUST</bcp14>
+      connect to an address it checked, so that a second DNS answer cannot
+      redirect the connection, and it <bcp14>MUST</bcp14> still validate the
+      TLS certificate against the host name in the URL.</li>
+      <li>A client <bcp14>MUST NOT</bcp14> follow a redirect to another
+      origin and <bcp14>MUST NOT</bcp14> follow more than three redirects.
+      It <bcp14>MUST</bcp14> apply the address check again on each hop.</li>
+      <li>A client <bcp14>MUST</bcp14> accept only the content codings
+      <tt>identity</tt> and <tt>gzip</tt>.</li>
+    </ul>
+    <t>A runtime operator <bcp14>MAY</bcp14> configure specific private
+    publishers, for example inside an organization. Such configuration is
+    outside this document.</t>
+  </section>
+</section>
+
+<section anchor="manifest">
+  <name>Manifest</name>
+  <t>A publisher <bcp14>MAY</bcp14> publish a manifest at
+  <tt>/.well-known/addp</tt> <xref target="RFC8615"/>. A client
+  <bcp14>MAY</bcp14> also learn a manifest URL through configuration.</t>
+  <dl newline="false" spacing="normal">
+    <dt><tt>version</tt>:</dt><dd><tt>"0.1"</tt>. Required.</dd>
+    <dt><tt>protocol</tt>:</dt><dd><tt>"addp"</tt>. Required.</dd>
+    <dt><tt>origin</tt>:</dt><dd>The publisher's origin. Required. It
+    <bcp14>MUST</bcp14> equal the origin the manifest was fetched from; a
+    client <bcp14>MUST</bcp14> reject the manifest otherwise.</dd>
+    <dt><tt>profiles</tt>:</dt><dd>The resource profiles of the publisher's
+    resources, 1 to 8 entries. Required.</dd>
+    <dt><tt>feed</tt>:</dt><dd>URL of the feed head
+    (<xref target="feed-head"/>). Optional.</dd>
+    <dt><tt>capability_documents</tt>:</dt><dd>URLs of capability
+    documents, at most 32, possibly none. Required.</dd>
+    <dt><tt>query</tt>:</dt><dd>Present if the origin also operates an
+    index. An object with <tt>endpoint</tt> (URL), <tt>profiles</tt>,
+    <tt>text_modes</tt> (<tt>["lexical"]</tt>) and <tt>max_limit</tt>
+    (1 to 100). Optional.</dd>
+  </dl>
+  <t>Every URL in a manifest <bcp14>MUST</bcp14> have the manifest's
+  origin. Hosting on another origin would need an explicit delegation
+  mechanism, which this version does not define; redirects do not stand in
+  for one.</t>
+  <t>A manifest describes what a publisher offers. It does not authorize
+  anything. An example is in <xref target="ex-manifest"/>.</t>
+  <t>A publisher that already publishes a UCP profile at
+  <tt>/.well-known/ucp</tt> does not need an ADDP manifest. A runtime can
+  read its catalog through the adapter in <xref target="ucp-adapter"/>.</t>
+</section>
+
+<section anchor="resources">
+  <name>Resources</name>
+
+  <section anchor="resource-repr">
+    <name>Representation</name>
+    <dl newline="false" spacing="normal">
+      <dt><tt>version</tt>:</dt><dd><tt>"0.1"</tt>.</dd>
+      <dt><tt>ref</tt>:</dt><dd>The resource reference.</dd>
+      <dt><tt>type</tt>:</dt><dd>An absolute URI naming the kind of thing,
+      for example <tt>https://schema.org/Offer</tt>
+      <xref target="SCHEMAORG"/>.</dd>
+      <dt><tt>profile</tt>:</dt><dd>One of the resource profiles in
+      <xref target="profiles"/>.</dd>
+      <dt><tt>revision</tt>:</dt><dd>An opaque string that changes whenever
+      the representation changes, or null. It is compared only for
+      equality. It <bcp14>MUST NOT</bcp14> be null for namespace
+      <tt>"addp"</tt>. It is null when an adapter maps a source that has no
+      revisions.</dd>
+      <dt><tt>facts</tt>:</dt><dd>An object whose members are defined by
+      the resource profile, at most 64 members.</dd>
+      <dt><tt>capabilities</tt>:</dt><dd>URLs of capability documents that
+      apply to this resource, at most 32. They <bcp14>MUST</bcp14> have the
+      publisher's origin.</dd>
+      <dt><tt>valid_until</tt>:</dt><dd>A timestamp until which the
+      publisher states that the facts remain accurate, or null if it makes
+      no such statement.</dd>
+    </dl>
+    <t>All members are required. <tt>extensions</tt> and
+    <tt>critical_extensions</tt> are permitted. An example is in
+    <xref target="ex-resource"/>.</t>
+  </section>
+
+  <section anchor="resolution">
+    <name>Resolution</name>
+    <t>For namespace <tt>"addp"</tt>, a client resolves a reference by
+    sending a discovery request (<xref target="fetching"/>) for
+    <tt>GET</tt> on <tt>id</tt> with <tt>Accept: application/json</tt>. The
+    response is a resource. Its <tt>ref</tt> <bcp14>MUST</bcp14> equal the
+    requested reference; a client <bcp14>MUST</bcp14> reject it otherwise.
+    A publisher returns 404 or 410 for a resource that does not exist.</t>
+    <t>A resolved resource is what the publisher says now. It is not a
+    reservation and not a price commitment. A price commitment, if the
+    domain has one, comes from a quote (<xref target="quote"/>).</t>
+  </section>
+
+  <section anchor="profiles">
+    <name>Resource Profiles</name>
+    <t>This version defines two resource profiles. A receiver
+    <bcp14>MUST</bcp14> reject a resource with any other profile. How to add
+    profiles without a new protocol version is an open issue
+    (<xref target="open-issues"/>).</t>
+
+    <section anchor="profile-core">
+      <name>core/0.1</name>
+      <t>Any <tt>type</tt>. <tt>facts</tt> may contain <tt>name</tt>, a
+      string of at most 512 characters. Query predicates on <tt>type</tt>
+      and <tt>publisher</tt> apply (<xref target="predicates"/>).</t>
+    </section>
+
+    <section anchor="profile-offer">
+      <name>offer-search/0.1</name>
+      <t><tt>type</tt> <bcp14>MUST</bcp14> be
+      <tt>https://schema.org/Offer</tt>. All members of <tt>facts</tt> are
+      optional, but <tt>unit_price_minor</tt> and <tt>currency</tt> appear
+      together or not at all. No other members are permitted.</t>
+      <table anchor="tab-offer">
+        <name>offer-search/0.1 Facts</name>
+        <thead><tr><th>Member</th><th>Type</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Name shown to buyers</td></tr>
+          <tr><td>unit_price_minor</td><td>integer</td><td>Price of one unit in minor units, as offered by the publisher. It never includes shipping. This profile does not say whether it includes tax.</td></tr>
+          <tr><td>currency</td><td>string</td><td>ISO 4217 code of unit_price_minor</td></tr>
+          <tr><td>condition</td><td>string</td><td>"new", "used" or "refurbished"</td></tr>
+          <tr><td>colour</td><td>string</td><td>Colour as stated by the publisher; free text</td></tr>
+          <tr><td>availability</td><td>string</td><td>"in_stock", "out_of_stock" or "unknown"</td></tr>
+          <tr><td>gtin</td><td>string</td><td>GTIN, 8 to 14 digits, as claimed by the publisher</td></tr>
+        </tbody>
+      </table>
+      <t>Because <tt>unit_price_minor</tt> excludes shipping and may exclude
+      tax, it cannot show that a purchase stays within a limit on the total.
+      A runtime that has such a limit needs a quote
+      (<xref target="quote"/>).</t>
+    </section>
+  </section>
+</section>
+
+<section anchor="feeds">
+  <name>Feeds</name>
+  <t>A feed lets an index copy a publisher's resources and keep the copy
+  current. It consists of a head, which points to a snapshot, and an
+  optional list of changes that follow the snapshot. Feeds are pulled over
+  HTTPS with discovery requests.</t>
+
+  <section anchor="feed-head">
+    <name>Head</name>
+    <t>A <tt>GET</tt> on the manifest's <tt>feed</tt> URL returns a
+    head:</t>
+    <dl newline="false" spacing="normal">
+      <dt><tt>epoch</tt>:</dt><dd>An opaque string. Sequence numbers are
+      meaningful only within one epoch.</dd>
+      <dt><tt>snapshot</tt>:</dt><dd>An object with <tt>id</tt>;
+      <tt>through</tt>, the sequence number after which the snapshot
+      reflects the publisher's state; <tt>parts</tt>, 1 to 1024 URLs; and
+      <tt>expires_at</tt>.</dd>
+      <dt><tt>changes</tt>:</dt><dd>URL of the change list. Optional.</dd>
+    </dl>
+    <t>Every URL in a head <bcp14>MUST</bcp14> have the publisher's origin.
+    An example is in <xref target="ex-head"/>.</t>
+  </section>
+
+  <section anchor="feed-parts">
+    <name>Snapshot Parts</name>
+    <t>Each part has <tt>epoch</tt>, <tt>snapshot_id</tt>,
+    <tt>through</tt> and <tt>resources</tt> (at most 10000). The first
+    three <bcp14>MUST</bcp14> match the head. Together, the parts contain
+    every resource the publisher publishes through this feed, each exactly
+    once, as of sequence number <tt>through</tt>. Every resource
+    <bcp14>MUST</bcp14> have the feed's origin as its publisher. A
+    publisher <bcp14>MUST</bcp14> serve every part of a snapshot, unchanged,
+    until the snapshot's <tt>expires_at</tt>. An example is in
+    <xref target="ex-part"/>.</t>
+  </section>
+
+  <section anchor="feed-install">
+    <name>Installing a Snapshot</name>
+    <t>An index <bcp14>MUST</bcp14> fetch and validate all parts of a
+    snapshot before <tt>expires_at</tt>, and only then replace what it holds
+    for that publisher. The replacement <bcp14>MUST</bcp14> be atomic for
+    readers: a query sees either the old set or the new set. If any part is
+    missing or invalid, the index keeps the old set. Parts of different
+    snapshots <bcp14>MUST NOT</bcp14> be combined.</t>
+    <t>Resources absent from an installed snapshot are deleted. Within one
+    epoch, an index <bcp14>MUST NOT</bcp14> install a snapshot whose
+    <tt>through</tt> is lower than that of the snapshot or changes it
+    already holds.</t>
+  </section>
+
+  <section anchor="feed-changes">
+    <name>Changes</name>
+    <t>A client requests changes with <tt>GET</tt> on the <tt>changes</tt>
+    URL with query parameters <tt>epoch</tt>, <tt>after</tt> (the last
+    sequence number the client has applied) and optionally <tt>limit</tt>.
+    The response is a change list:</t>
+    <dl newline="false" spacing="normal">
+      <dt><tt>epoch</tt>:</dt><dd>The epoch.</dd>
+      <dt><tt>from_exclusive</tt>:</dt><dd>Equal to <tt>after</tt>.</dd>
+      <dt><tt>through</tt>:</dt><dd>The last sequence number included, or
+      <tt>from_exclusive</tt> if there are none.</dd>
+      <dt><tt>events</tt>:</dt><dd>At most 10000 events. Each has
+      <tt>seq</tt> and <tt>op</tt>. An <tt>"upsert"</tt> event carries the
+      complete new <tt>resource</tt>; a <tt>"delete"</tt> event carries the
+      <tt>ref</tt> of the deleted resource.</dd>
+      <dt><tt>more</tt>:</dt><dd>True if further events existed when the
+      response was built.</dd>
+    </dl>
+    <t>Sequence numbers are assigned by the publisher, one per change, with
+    no gaps. The events in a response <bcp14>MUST</bcp14> have the
+    consecutive numbers <tt>from_exclusive</tt>+1 to <tt>through</tt>. The
+    publisher may return fewer events than <tt>limit</tt>.</t>
+    <t>An index applies a change list as follows. It <bcp14>MUST</bcp14>
+    validate every event first and apply all of them atomically. If
+    <tt>through</tt> is not greater than the index's watermark, the list is
+    a replay and the index ignores it. If <tt>from_exclusive</tt> differs
+    from the watermark, or the epoch differs, the index
+    <bcp14>MUST NOT</bcp14> apply the list; it requests changes again from
+    its watermark or installs a new snapshot. After applying, the watermark
+    is <tt>through</tt>.</t>
+    <t>A publisher <bcp14>MUST</bcp14> keep every change after the
+    <tt>through</tt> of each snapshot that has not expired. If it no longer
+    has the changes after <tt>after</tt>, it responds with
+    <tt>cursor_expired</tt>, and the index installs a new snapshot. If the
+    epoch is not current, it responds with <tt>state_conflict</tt>. A 404
+    or 410 response for the feed or change list <bcp14>MUST NOT</bcp14> be
+    treated as the deletion of all resources. An example is in
+    <xref target="ex-delta"/>.</t>
+  </section>
+
+  <section anchor="feed-other">
+    <name>Other Sources</name>
+    <t>An index <bcp14>MAY</bcp14> collect resources from sitemaps, product
+    feeds, UCP catalogs or other sources through adapters. It
+    <bcp14>MUST NOT</bcp14> present such data as having the consistency
+    described in this section unless the source provides the same
+    guarantees.</t>
+  </section>
+</section>
+
+<section anchor="query">
+  <name>Query</name>
+
+  <section anchor="query-request">
+    <name>Request</name>
+    <t>A client sends a query with <tt>POST</tt> to the index's query
+    endpoint, as <tt>application/json</tt> with no content coding. An
+    initial query has these members:</t>
+    <dl newline="false" spacing="normal">
+      <dt><tt>profile</tt>:</dt><dd>The resource profile whose predicates and
+      fields the query uses. A query with profile <tt>core/0.1</tt> matches
+      resources of any profile. A query with <tt>offer-search/0.1</tt>
+      matches only resources with that profile.</dd>
+      <dt><tt>text</tt>:</dt><dd>Optional. An object with <tt>mode</tt>
+      (<tt>"lexical"</tt>) and <tt>value</tt>
+      (<xref target="text"/>).</dd>
+      <dt><tt>where</tt>:</dt><dd>Up to 32 predicates, all of which must
+      hold. Each has <tt>field</tt>, <tt>op</tt> and <tt>value</tt>.</dd>
+      <dt><tt>select</tt>:</dt><dd>Fields of <tt>facts</tt> to return
+      (<xref target="select"/>).</dd>
+      <dt><tt>limit</tt>:</dt><dd>Page size, 1 to 100. If it exceeds the
+      index's <tt>max_limit</tt>, the index uses <tt>max_limit</tt>.</dd>
+    </dl>
+    <t>A continuation query has only <tt>version</tt> and <tt>cursor</tt>
+    (<xref target="paging"/>). An example is in
+    <xref target="ex-query"/>.</t>
+  </section>
+
+  <section anchor="predicates">
+    <name>Predicates</name>
+    <table anchor="tab-predicates">
+      <name>Predicates</name>
+      <thead><tr><th>Field</th><th>Operators</th><th>Profiles</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>type</td><td>eq, in</td><td>all</td><td>URI string or array</td></tr>
+        <tr><td>publisher</td><td>eq, in</td><td>all</td><td>origin string or array</td></tr>
+        <tr><td>currency</td><td>eq</td><td>offer-search/0.1</td><td>ISO 4217 code</td></tr>
+        <tr><td>unit_price_minor</td><td>gte, lte</td><td>offer-search/0.1</td><td>integer</td></tr>
+        <tr><td>condition</td><td>eq, in</td><td>offer-search/0.1</td><td>"new", "used", "refurbished"</td></tr>
+      </tbody>
+    </table>
+    <t>A predicate on <tt>unit_price_minor</tt> requires exactly one
+    <tt>currency</tt> predicate in the same query. A resource that lacks the
+    field, or has a value of the wrong type, does not match. <tt>in</tt>
+    takes an array of 1 to 32 strings.</t>
+    <t>An index <bcp14>MUST</bcp14> reject a query that uses a field,
+    operator, value or text mode it does not support, with
+    <tt>unsupported_query</tt>. It <bcp14>MUST NOT</bcp14> drop a predicate
+    and answer the rest of the query: a result for a weaker query presented
+    as the result of the stronger one is a wrong answer.</t>
+  </section>
+
+  <section anchor="text">
+    <name>Lexical Text</name>
+    <t>With mode <tt>"lexical"</tt>, <tt>value</tt> is split on white space
+    into terms. A resource matches if, for every term, the canonical
+    caseless form of the term is a substring of the canonical caseless form
+    of <tt>facts.name</tt>. The canonical caseless form of a string X is
+    NFD(toCasefold(NFD(X))), as defined in Section 3.13 of
+    <xref target="UNICODE"/>. A value with no terms is rejected. Text is a
+    filter here, not a ranking signal.</t>
+  </section>
+
+  <section anchor="select">
+    <name>Selected Fields</name>
+    <t><tt>select</tt> names fields of <tt>facts</tt> defined by the query's
+    profile. The index returns those fields and also every field of
+    <tt>facts</tt> used in a predicate, so that a client can see why a
+    candidate matched. Selecting a field the profile does not define is
+    rejected with <tt>unsupported_query</tt>.</t>
+  </section>
+
+  <section anchor="paging">
+    <name>Order and Pagination</name>
+    <t>Results are ordered by reference: by <tt>publisher</tt>, then
+    <tt>namespace</tt>, then <tt>id</tt>, each compared as a sequence of
+    Unicode code points. Indexes do not rank. A runtime that wants a ranking
+    computes it.</t>
+    <t>All pages of one query reflect one state of the index, taken when
+    the initial query was answered. Pages do not overlap and do not skip
+    results. <tt>next_cursor</tt> is an opaque string, or null on the last
+    page. A continuation query returns the next page, and repeating it
+    returns the same page. An unknown or expired cursor is rejected with
+    <tt>cursor_expired</tt>; the client then starts over.</t>
+    <t>An index that authenticates clients <bcp14>MUST</bcp14> bind cursors
+    to the client and reject them from another client with
+    <tt>forbidden</tt>. An index <bcp14>MAY</bcp14> limit the number of live
+    cursors per client. It <bcp14>SHOULD NOT</bcp14> let the queries of one
+    authenticated client expire the cursors of another. Unauthenticated
+    clients cannot be told apart and share one limit.</t>
+  </section>
+
+  <section anchor="result">
+    <name>Response</name>
+    <t>The response has <tt>version</tt>, <tt>snapshot</tt> (an opaque
+    identifier of the index state the pages reflect), <tt>items</tt> (at
+    most 100 candidates) and <tt>next_cursor</tt>. An example is in
+    <xref target="ex-result"/>.</t>
+  </section>
+</section>
+
+<section anchor="candidates">
+  <name>Candidates</name>
+  <t>A candidate has these members, all required:</t>
+  <dl newline="false" spacing="normal">
+    <dt><tt>ref</tt>, <tt>type</tt>, <tt>profile</tt>:</dt><dd>As in the
+    resource.</dd>
+    <dt><tt>source_revision</tt>:</dt><dd>The revision of the resource the
+    index holds, or null.</dd>
+    <dt><tt>retrieved_at</tt>:</dt><dd>When the index fetched that
+    revision, or null if unknown.</dd>
+    <dt><tt>indexed_at</tt>:</dt><dd>When the index stored it.</dd>
+    <dt><tt>valid_until</tt>:</dt><dd>Copied from the resource.</dd>
+    <dt><tt>facts</tt>:</dt><dd>The fields described in
+    <xref target="select"/>.</dd>
+    <dt><tt>paid_inclusion</tt>:</dt><dd><tt>"yes"</tt>, <tt>"no"</tt> or
+    <tt>"unknown"</tt>: whether the publisher paid the index to include this
+    resource. Since results are not ranked, position cannot be bought;
+    inclusion can.</dd>
+  </dl>
+  <t>A candidate is a claim by the index about a claim by the publisher. A
+  runtime <bcp14>MUST NOT</bcp14> use a candidate as authorization or as
+  the price of any action.</t>
+</section>
+
+<section anchor="reevaluation">
+  <name>Resolution and Re-evaluation</name>
+  <t>Before a runtime tells the user that a candidate meets the user's hard
+  constraints, and before any action concerning it, the runtime
+  <bcp14>MUST</bcp14> resolve the reference at the publisher
+  (<xref target="resolution"/>) and evaluate every hard constraint against
+  the resolved resource. That includes the predicates and text of the query
+  that produced the candidate, and the constraints the runtime applied
+  itself instead of sending them to the index, whether for privacy
+  (<xref target="privacy"/>) or because the index cannot filter on them. If
+  any constraint does not hold, the candidate is not eligible. A runtime
+  <bcp14>MUST NOT</bcp14> relax a constraint to keep a candidate eligible.
+  If the user wants to relax a constraint, that is a new decision by the
+  user.</t>
+  <t>For example, an index reports a price of EUR 329.00. The resolved
+  resource says EUR 389.00, and the query required at most EUR 350.00. The
+  candidate is not eligible.</t>
+</section>
+
+<section anchor="federation">
+  <name>Querying Several Indexes</name>
+  <t>A runtime queries a set of indexes configured by its user or
+  operator. It <bcp14>MUST NOT</bcp14> query an index it learned about from
+  a publisher, another index, or content shown to a model, unless the user
+  or operator adds it to that set.</t>
+  <t>The runtime records, for each index, whether the query succeeded,
+  failed, was rate limited or timed out. If any did not succeed, the
+  combined result is partial, and the runtime <bcp14>MUST</bcp14> say so
+  wherever it presents the result (<xref target="projections"/>).</t>
+  <t>Candidates with equal references describe the same resource. If they
+  differ in <tt>source_revision</tt>, the runtime resolves the resource
+  rather than picking one. Candidates with different references are
+  different resources, even if they share a GTIN or a name; the runtime
+  <bcp14>MUST NOT</bcp14> merge them, their prices, or any authority
+  related to them.</t>
+</section>
+
+<section anchor="capabilities">
+  <name>Capabilities</name>
+  <t>A capability document describes an operation on a resource:</t>
+  <dl newline="false" spacing="normal">
+    <dt><tt>id</tt>:</dt><dd>The URL of the document itself.</dd>
+    <dt><tt>profile</tt>:</dt><dd>The operation profile.</dd>
+    <dt><tt>revision</tt>:</dt><dd>A string identifying this version of the
+    document.</dd>
+    <dt><tt>input_schema</tt>, <tt>output_schema</tt>:</dt><dd>Each an
+    object with <tt>url</tt> and <tt>sha256</tt>, the lowercase hexadecimal
+    <xref target="RFC4648"/> SHA-256 <xref target="SHS"/> hash of the exact
+    bytes of the schema document after content decoding.</dd>
+    <dt><tt>effects</tt>:</dt><dd>Up to 16 strings describing side
+    effects. Advisory.</dd>
+    <dt><tt>binding</tt>:</dt><dd>An object with <tt>protocol</tt>,
+    <tt>protocol_version</tt>, <tt>endpoint</tt> and
+    <tt>operation</tt>.</dd>
+  </dl>
+  <t>The document's <tt>id</tt>, <tt>binding.endpoint</tt> and schema URLs
+  <bcp14>MUST</bcp14> have the publisher's origin. An example is in
+  <xref target="ex-capability"/>.</t>
+  <t>The capability digest is the SHA-256 hash of the exact bytes of the
+  capability document as the runtime received it, after content decoding.
+  A runtime computes it itself and <bcp14>MUST NOT</bcp14> use a digest
+  supplied by a publisher, an index or a quote in its place. A document
+  whose bytes changed, even only in formatting, has a different digest.</t>
+  <t>A runtime <bcp14>MUST NOT</bcp14> perform an operation unless it has
+  an execution binding for the exact <tt>protocol</tt>,
+  <tt>protocol_version</tt> and <tt>operation</tt>, installed by the
+  runtime's operator. A runtime <bcp14>MUST NOT</bcp14> download or run
+  code offered by a publisher to perform an operation. Declared
+  <tt>effects</tt> <bcp14>MUST NOT</bcp14> reduce the checks the runtime
+  applies. An operation whose effects are unknown to the runtime is
+  treated as irreversible.</t>
+</section>
+
+<section anchor="runtime">
+  <name>Runtime Profile</name>
+  <t>This section applies to runtimes that perform actions with side
+  effects for a user. A runtime that only discovers and presents resources
+  need not implement it. The objects in this section are local to the
+  runtime or exchanged with the execution binding; they are not
+  published.</t>
+
+  <section anchor="roles">
+    <name>Roles</name>
+    <t>The model proposes. The runtime decides whether a proposal is within
+    what the user approved. The service that performs the action enforces
+    its own authorization. None of these steps may be skipped on the grounds
+    that another has been done.</t>
+  </section>
+
+  <section anchor="intent">
+    <name>Intent</name>
+    <t>An intent records what the user approved. This document defines one
+    operation profile for intents, <tt>sandbox-purchase/0.1</tt>, used by
+    the sandbox binding (<xref target="sandbox"/>):</t>
+    <dl newline="false" spacing="normal">
+      <dt><tt>id</tt>, <tt>revision</tt>:</dt><dd>Identifier and revision
+      number, starting at 1.</dd>
+      <dt><tt>target</tt>:</dt><dd><tt>ref</tt> and <tt>quantity</tt>
+      (1).</dd>
+      <dt><tt>constraints</tt>:</dt><dd><tt>max_total</tt>, an amount, and
+      <tt>max_count</tt> (1), the number of operations allowed.</dd>
+      <dt><tt>permissions</tt>:</dt><dd><tt>purchase</tt> (boolean),
+      <tt>substitution</tt> (false), <tt>recurring</tt> (false).</dd>
+      <dt><tt>capability_digest</tt>:</dt><dd>The digest of the capability
+      document the user's approval covered.</dd>
+      <dt><tt>expires_at</tt>:</dt><dd>End of validity.</dd>
+    </dl>
+    <t><tt>max_total</tt> is the most the merchant may charge for the whole
+    intent, as the quote's <tt>total</tt> states it. Fees charged to the
+    payer by others, such as currency conversion fees, are not included
+    unless the execution binding guarantees otherwise.</t>
+    <t>Rules:</t>
+    <ul>
+      <li>Intents are created and changed only by a path that records the
+      user's approval. A model <bcp14>MUST NOT</bcp14> be able to create,
+      approve or change an intent; it can only propose one.</li>
+      <li>A revision is immutable. A change creates revision n+1. A runtime
+      <bcp14>MUST NOT</bcp14> accept a new revision while an operation for
+      the intent is unresolved, and <bcp14>MUST NOT</bcp14> accept one whose
+      constraints are already exceeded by recorded spending.</li>
+      <li>Permission to search does not imply permission to buy.</li>
+      <li>A runtime <bcp14>MUST NOT</bcp14> act on an intent that contains a
+      constraint it does not understand.</li>
+      <li>Intents are not sent to publishers or indexes.</li>
+    </ul>
+    <t>An example is in <xref target="ex-intent"/>.</t>
+  </section>
+
+  <section anchor="quote">
+    <name>Quote</name>
+    <t>A quote is the service's statement of what it will charge for a
+    specific checkout session: <tt>id</tt>, <tt>revision</tt>,
+    <tt>session</tt>, <tt>ref</tt>, <tt>quantity</tt>, <tt>total</tt> (an
+    amount), <tt>total_scope</tt> (<tt>"merchant_total"</tt>, meaning all
+    the merchant charges including tax and shipping),
+    <tt>capability_digest</tt> and <tt>expires_at</tt>. How a runtime
+    obtains a quote depends on the execution binding. An example is in
+    <xref target="ex-quote"/>.</t>
+  </section>
+
+  <section anchor="checks">
+    <name>Checks Before Execution</name>
+    <t>Before dispatching an operation, a runtime <bcp14>MUST</bcp14>:</t>
+    <ol>
+      <li>Confirm that the intent revision is approved, not cancelled and
+      not expired, and that it permits the action.</li>
+      <li>Compute the digest of the capability document it is about to use
+      and confirm that it equals the intent's <tt>capability_digest</tt>. If
+      the document changed, the earlier approval does not cover it.</li>
+      <li>Select the execution binding installed for the document's exact
+      <tt>protocol</tt>, <tt>protocol_version</tt> and <tt>operation</tt>,
+      and confirm that <tt>binding.endpoint</tt> has the origin of the
+      intent's target publisher.</li>
+      <li>Obtain a current quote, confirm that it has not expired, and
+      confirm that its <tt>capability_digest</tt> equals the digest
+      computed in step 2.</li>
+      <li>Confirm that the quote's reference and quantity equal the intent's
+      target, that its currency matches <tt>max_total</tt>, and that
+      <tt>total</tt> plus the amounts already reserved or spent for the
+      intent does not exceed <tt>max_total</tt>.</li>
+      <li>Reserve the amount (<xref target="budget"/>).</li>
+      <li>Build the operation from the intent and the quote, not from text
+      written by the model.</li>
+    </ol>
+    <t>The operation carries <tt>intent_id</tt>, <tt>intent_revision</tt>,
+    <tt>quote_id</tt>, <tt>quote_revision</tt>, <tt>session</tt>,
+    <tt>ref</tt>, <tt>quantity</tt>, <tt>total</tt> and
+    <tt>capability_digest</tt>. An example is in
+    <xref target="ex-operation"/>.</t>
+    <t>The runtime chooses an identifier for each operation, and the service
+    uses it to recognize repeats. The identifier <bcp14>MUST</bcp14> contain
+    at least 128 bits from a cryptographically secure random source, or be
+    guaranteed unique in some other way among all runtimes that act for the
+    same user.</t>
+  </section>
+
+  <section anchor="binding-reqs">
+    <name>Requirements on Execution Bindings</name>
+    <t>A runtime <bcp14>MUST NOT</bcp14> perform an operation through a
+    binding without asking the user at the time, unless the service behind
+    the binding:</t>
+    <ol>
+      <li>rejects the operation if the quote revision, session, reference,
+      quantity, total or capability digest differs from the quote it
+      currently holds;</li>
+      <li>records the outcome of every operation identifier it accepts for
+      processing, rejections included, returns that outcome for any later
+      request with the same identifier and an identical operation, and
+      rejects the same identifier with a different operation;</li>
+      <li>answers a status request for an identifier and an operation with
+      the recorded outcome, with "not found" if nothing is recorded for the
+      identifier, or with "conflict" if a different operation is recorded
+      for it;</li>
+      <li>enforces authorization itself, independent of the runtime's
+      checks, including expiry and revocation.</li>
+    </ol>
+    <t>A service need not record requests it cannot attribute to a valid
+    authorization. If it did, a third party could use up identifiers.</t>
+    <t>If a binding cannot meet these requirements, the runtime hands the
+    action to the user. The binding documentation <bcp14>MUST</bcp14> say
+    which component enforces each requirement. A limit on the maximum amount
+    of a payment credential is not the same as requirement 1: it caps a
+    charge but does not tie it to the quoted total.</t>
+  </section>
+
+  <section anchor="budget">
+    <name>Reservations</name>
+    <t>A runtime keeps a durable journal. Before dispatch it reserves the
+    operation's total against the intent, in one atomic step with the checks
+    in <xref target="checks"/>, so that two concurrent operations cannot
+    both fit under a limit that only one fits under. A reservation is
+    released only when it is known that the operation had no effect and
+    never will: it was never dispatched, the service recorded a failed
+    outcome for it (requirement 2), or the service reports a conflict
+    (requirement 3), in which case the identifier belongs to a different
+    operation and this one can never be accepted. A limit that must hold
+    across several runtimes needs a component that all of them consult;
+    separate journals do not provide it.</t>
+  </section>
+
+  <section anchor="outcomes">
+    <name>Outcomes and Recovery</name>
+    <t>An operation is <tt>not_started</tt>, <tt>in_progress</tt>,
+    <tt>pending</tt>, <tt>succeeded</tt>, <tt>failed</tt>,
+    <tt>cancelled</tt> or <tt>unknown</tt>. <tt>succeeded</tt>,
+    <tt>failed</tt> and <tt>cancelled</tt> are final.</t>
+    <ul>
+      <li>If the runtime sent an operation and did not get an answer, or
+      got an error without a recorded outcome, the outcome is
+      <tt>unknown</tt>, not <tt>failed</tt>. The runtime
+      <bcp14>MUST</bcp14> keep the reservation and ask the service for the
+      status.</li>
+      <li>"Not found" does not settle the operation: the request may still
+      be in transit. The runtime <bcp14>MAY</bcp14> send the identical
+      operation again with the same identifier. Because of requirement 2,
+      this either performs the operation once or returns the recorded
+      outcome. The runtime <bcp14>MUST NOT</bcp14> send the operation under
+      a new identifier.</li>
+      <li>Cancelling an intent stops operations not yet dispatched and
+      releases their reservations. It does not release the reservation of
+      an operation that may have been dispatched, and it does not undo an
+      effect.</li>
+      <li>Undoing an effect, such as a refund, is a separate operation that
+      needs its own authority and can fail. If it fails, the spending
+      remains recorded.</li>
+    </ul>
+  </section>
+
+  <section anchor="authorization">
+    <name>Authorization</name>
+    <t>Authorization for an operation comes from the protocol the binding
+    uses. If the endpoint is an OAuth protected resource, the runtime
+    <bcp14>SHOULD</bcp14> use its protected resource metadata
+    <xref target="RFC9728"/> and <bcp14>MUST</bcp14> have its own reason to
+    trust the authorization server it uses, as discussed in Section 7.6 of
+    <xref target="RFC9728"/>. OAuth Rich Authorization Requests
+    <xref target="RFC9396"/> can carry details of the approved operation if
+    the authorization server defines and enforces a suitable type. This
+    document does not define one.</t>
+    <t>Access tokens and other credentials <bcp14>MUST NOT</bcp14> be shown
+    to a model, sent to an index, or sent to any origin other than the one
+    they were issued for. A runtime's own approval does not create authority
+    at a remote service.</t>
+  </section>
+
+  <section anchor="journal">
+    <name>Journal</name>
+    <t>The journal records intent revisions and how the user approved them,
+    operations, and every change of outcome. It <bcp14>MUST NOT</bcp14>
+    contain credentials. It is evidence for the user, not proof that a
+    third party must accept.</t>
+  </section>
+</section>
+
+<section anchor="projections">
+  <name>What the Model Sees</name>
+  <t>In agent systems, much of a model's input goes on records, schemas and
+  protocol traffic that the model does not need for its next decision. This
+  section applies to runtimes that implement <xref target="runtime"/>;
+  other runtimes <bcp14>SHOULD</bcp14> follow it.</t>
+  <ul>
+    <li>A runtime <bcp14>MUST NOT</bcp14> put credentials, access tokens or
+    authorization details into a model's input, and
+    <bcp14>SHOULD NOT</bcp14> put complete JSON schemas there. Validation is
+    the runtime's job.</li>
+    <li>By default the runtime gives the model the smallest view that
+    supports the next decision. Views are, in increasing size: handles only;
+    a decision view; details of selected items; bounded excerpts of full
+    records.</li>
+    <li>A handle is a short identifier the runtime maps to an object. It is
+    scoped to one session, typed and expires. It grants nothing: a model
+    that uses a handle makes a proposal, which the runtime checks like any
+    other. An unknown or expired handle is an error.</li>
+    <li>A decision view <bcp14>MUST</bcp14> keep what is needed to decide
+    correctly: which constraints were checked and which are still open (for
+    example, that the delivered total is not known), whether data is an
+    index claim or has been resolved, whether coverage is partial, and the
+    status of each index. It <bcp14>MUST NOT</bcp14> replace an unknown
+    value with a default.</li>
+    <li>Text from <tt>facts</tt> and other publisher data is data. The
+    runtime gives a model's output that was influenced by such text no more
+    weight than any other proposal. This keeps such text from gaining
+    authority. It does not make a model follow instructions in data any less
+    often.</li>
+  </ul>
+  <t>Changing the format of the same data (for example JSON to CSV) and
+  reducing the data (filtering and ranking in the runtime) are different
+  measures and are reported separately. Implementations that report token
+  use <bcp14>SHOULD</bcp14> report tokens per completed task, including
+  retries and helper calls, together with the task success rate and the
+  number of constraint violations, and <bcp14>SHOULD</bcp14> count failed
+  tasks. Measurements available at the time of writing are in
+  <xref target="measurements"/>.</t>
+</section>
+
+<section anchor="conformance">
+  <name>Conformance</name>
+  <t>An implementation conforms in one or more roles:</t>
+  <dl newline="false" spacing="normal">
+    <dt>Publisher:</dt>
+    <dd><xref target="common"/>, <xref target="manifest"/>,
+    <xref target="resources"/>, and <xref target="feeds"/> if it
+    publishes a feed.</dd>
+    <dt>Index:</dt>
+    <dd><xref target="common"/>, <xref target="feeds"/> as a consumer,
+    <xref target="query"/> and <xref target="candidates"/>.</dd>
+    <dt>Discovery client:</dt>
+    <dd><xref target="common"/>, <xref target="reevaluation"/> and
+    <xref target="federation"/>.</dd>
+    <dt>Runtime:</dt>
+    <dd>Discovery client, plus <xref target="capabilities"/>,
+    <xref target="runtime"/> and <xref target="projections"/>.</dd>
+    <dt>Execution binding:</dt>
+    <dd><xref target="binding-reqs"/>, documented for one protocol and
+    version.</dd>
+  </dl>
+  <t>The companion repository at <eref
+  target="https://github.com/famfamfam/addp"/> contains JSON Schemas
+  <xref target="JSON-SCHEMA"/> for the messages, example files, and a
+  reference implementation with tests. The schemas check form only.
+  Passing the tests is evidence, not proof, of conformance.</t>
+</section>
+
+<section anchor="security">
+  <name>Security Considerations</name>
+  <t>This section follows the guidance in <xref target="RFC3552"/>. The
+  attacker may operate a publisher, an index, or both; may place text in
+  data that a model reads; and may observe or interrupt network traffic
+  outside TLS-protected channels. The user's device and the runtime are
+  assumed not to be compromised.</t>
+
+  <section anchor="sec-claims">
+    <name>Claims Are Not Authority</name>
+    <t>Manifests, resources, candidates, capability documents and their
+    <tt>effects</tt> are written by parties who may gain from misleading the
+    runtime. TLS shows which origin sent a message. It does not show that
+    the message is true. ADDP therefore uses claims only as inputs to
+    checks, and derives authority only from the user's approval and the
+    executing service's authorization (<xref target="overview"/>).</t>
+  </section>
+
+  <section anchor="sec-ssrf">
+    <name>Requests to Internal Addresses</name>
+    <t>A runtime or index that fetches URLs taken from messages can be made
+    to send requests to internal services. The address checks, the pinning
+    of the checked address, and the redirect rules in
+    <xref target="fetching"/> address this. Checking addresses without
+    connecting to the checked address leaves a DNS rebinding attack
+    open.</t>
+  </section>
+
+  <section anchor="sec-dos">
+    <name>Resource Exhaustion</name>
+    <t>Large or deeply nested messages, compressed responses that expand
+    greatly, large feeds and many cursors can exhaust memory and storage.
+    Receivers enforce the limits in <xref target="limits"/> during decoding,
+    and indexes limit the number of cursors they keep per client. A single
+    malformed record makes a whole snapshot invalid
+    (<xref target="feed-install"/>), so a publisher can keep its own data in
+    an index from being updated, but not anyone else's. Publishers can be
+    polled at high rates by many indexes; they <bcp14>MAY</bcp14> respond
+    with <tt>rate_limited</tt>.</t>
+  </section>
+
+  <section anchor="sec-injection">
+    <name>Instructions in Data</name>
+    <t>Resource names and other text can contain instructions aimed at a
+    model. No format rule prevents this; a name is a string. ADDP limits
+    what such text can achieve: a model's output is only a proposal, intents
+    come from the user's approval, operations are built from the intent and
+    the quote, and credentials never reach the model
+    (<xref target="projections"/>). Within those limits a manipulated model
+    can still propose a legitimate but poor option. The user's constraints
+    bound the damage; they do not remove it.</t>
+  </section>
+
+  <section anchor="sec-index">
+    <name>Index Manipulation</name>
+    <t>An index can omit resources, include resources for payment, or
+    return stale facts. Fixed ordering (<xref target="paging"/>) removes
+    ranking as a lever, and <tt>paid_inclusion</tt> discloses paid inclusion
+    if the index is honest. Resolution (<xref target="reevaluation"/>)
+    catches stale or false facts about resources that are returned. Omission
+    cannot be detected from one index; querying several independent indexes
+    reduces it.</t>
+  </section>
+
+  <section anchor="sec-price">
+    <name>Changing Prices</name>
+    <t>A publisher can show one price in its feed and charge another. The
+    resolved resource and the quote are checked again before execution, and
+    requirement 1 in <xref target="binding-reqs"/> makes the service reject
+    an operation whose total differs from its quote. Together these turn a
+    changed price into a failed operation rather than a larger charge,
+    provided the binding meets that requirement.</t>
+  </section>
+
+  <section anchor="sec-capability">
+    <name>Changed or Substituted Capabilities</name>
+    <t>A publisher can change a capability document after the user approved
+    an action based on it. The runtime computes the digest of the document
+    itself and compares it with the one in the intent
+    (<xref target="checks"/>); a changed document needs new approval. A
+    digest supplied by the publisher, for example in a quote, cannot replace
+    this check, because the publisher controls both. The same-origin rules
+    keep a capability from pointing execution at another origin. Execution
+    bindings are installed by the runtime's operator, so a publisher cannot
+    supply the code that performs its own operations.</t>
+  </section>
+
+  <section anchor="sec-retry">
+    <name>Retries and Lost Responses</name>
+    <t>Treating a lost response as a failure and retrying under a new
+    identifier can perform an action twice. <xref target="outcomes"/>
+    requires the <tt>unknown</tt> state, status requests, and retries only
+    under the same identifier. Requirement 2 in
+    <xref target="binding-reqs"/> also records rejections, so a copy of a
+    rejected request that arrives late cannot succeed. Random identifiers of
+    at least 128 bits (<xref target="checks"/>) keep two runtimes from
+    choosing the same identifier by accident.</t>
+  </section>
+
+  <section anchor="sec-limits">
+    <name>Limits Across Runtimes</name>
+    <t>A user with several devices, each with its own runtime and journal,
+    can exceed a limit that each runtime enforces locally. Only a component
+    all of them consult, such as the executing service or a payment
+    provider, can enforce a shared limit.</t>
+  </section>
+
+  <section anchor="sec-tokens">
+    <name>Authorization Servers and Tokens</name>
+    <t>A publisher can name an authorization server under an attacker's
+    control. <xref target="RFC9728"/> does not define how a client decides
+    which authorization servers to trust, and neither does this document; a
+    runtime needs its own basis for that decision. Tokens are sent only to
+    the origin they were issued for and never to a model or an index
+    (<xref target="authorization"/>).</t>
+  </section>
+
+  <section anchor="sec-cursors">
+    <name>Cursors and Handles</name>
+    <t>A cursor for a public query gives access only to results that anyone
+    could obtain; for authenticated indexes it is bound to the client.
+    Handles are local to a session and grant nothing, so a model that
+    invents or reuses a handle can at most propose something the runtime
+    then checks.</t>
+  </section>
+
+  <section anchor="sec-out-of-scope">
+    <name>Not Addressed</name>
+    <t>This document does not protect against a merchant that takes payment
+    and does not deliver, a compromised runtime or user device, omission by
+    every configured index, or a model that chooses badly among options
+    that all meet the user's constraints.</t>
+  </section>
+</section>
+
+<section anchor="privacy">
+  <name>Privacy Considerations</name>
+  <t>This section follows <xref target="RFC6973"/>.</t>
+  <ul>
+    <li>Queries tell an index what the user is looking for. A runtime
+    <bcp14>SHOULD</bcp14> send only the predicates needed to keep the result
+    set manageable and apply other constraints locally; they are then
+    checked at resolution (<xref target="reevaluation"/>). It
+    <bcp14>MUST NOT</bcp14> send addresses, payment details or intent
+    identifiers to an index.</li>
+    <li>Each additional index learns the query. This is one reason indexes
+    are configured, not discovered.</li>
+    <li>Discovery requests carry no cookies or per-user identifiers
+    (<xref target="fetching"/>), so a publisher cannot link them to a user
+    account. The publisher still learns which resources are being resolved,
+    and can link requests by network address. A runtime <bcp14>MAY</bcp14>
+    resolve only the candidates it is about to present.</li>
+    <li>A cursor links the pages of one query. Indexes
+    <bcp14>SHOULD NOT</bcp14> keep cursors or query logs with client
+    identifiers longer than needed to serve the query.</li>
+    <li>The journal contains what the user bought and when. It stays with
+    the runtime.</li>
+    <li>The UCP adapter sends the search text and currency to the business,
+    not the user's price limit (<xref target="ucp-adapter"/>).</li>
+  </ul>
+</section>
+
+<section anchor="iana">
+  <name>IANA Considerations</name>
+  <t>IANA is requested to register the following in the "Well-Known URIs"
+  registry <xref target="RFC8615"/>:</t>
+  <dl newline="false" spacing="compact">
+    <dt>URI Suffix:</dt><dd>addp</dd>
+    <dt>Change Controller:</dt><dd>IETF</dd>
+    <dt>Specification Document(s):</dt><dd>This document</dd>
+    <dt>Status:</dt><dd>provisional</dd>
+    <dt>Related Information:</dt><dd>None</dd>
+  </dl>
+  <t>This document uses <tt>application/json</tt> and
+  <tt>application/problem+json</tt> and requests no media type
+  registrations. The error codes and profiles are fixed for this version;
+  whether they need registries is an open issue
+  (<xref target="open-issues"/>).</t>
+</section>
+
+</middle>
+
+<back>
+  <references>
+    <name>References</name>
+    <references>
+      <name>Normative References</name>
+      <xi:include href="references/RFC2119.xml"/>
+      <xi:include href="references/RFC3339.xml"/>
+      <xi:include href="references/RFC3986.xml"/>
+      <xi:include href="references/RFC4648.xml"/>
+      <xi:include href="references/RFC6454.xml"/>
+      <xi:include href="references/RFC7493.xml"/>
+      <xi:include href="references/RFC8174.xml"/>
+      <xi:include href="references/RFC8259.xml"/>
+      <xi:include href="references/RFC8615.xml"/>
+      <xi:include href="references/RFC9110.xml"/>
+      <xi:include href="references/RFC9457.xml"/>
+      <reference anchor="ISO4217" target="https://www.iso.org/iso-4217-currency-codes.html">
+        <front>
+          <title>Codes for the representation of currencies</title>
+          <author><organization>International Organization for Standardization</organization></author>
+          <date year="2015"/>
+        </front>
+        <seriesInfo name="ISO" value="4217:2015"/>
+      </reference>
+      <reference anchor="SHS" target="https://doi.org/10.6028/NIST.FIPS.180-4">
+        <front>
+          <title>Secure Hash Standard (SHS)</title>
+          <author><organization>National Institute of Standards and Technology</organization></author>
+          <date month="August" year="2015"/>
+        </front>
+        <seriesInfo name="FIPS PUB" value="180-4"/>
+        <seriesInfo name="DOI" value="10.6028/NIST.FIPS.180-4"/>
+      </reference>
+      <reference anchor="UNICODE" target="https://www.unicode.org/versions/latest/">
+        <front>
+          <title>The Unicode Standard</title>
+          <author><organization>The Unicode Consortium</organization></author>
+          <date/>
+        </front>
+      </reference>
+    </references>
+    <references>
+      <name>Informative References</name>
+      <xi:include href="references/RFC3552.xml"/>
+      <xi:include href="references/RFC6973.xml"/>
+      <xi:include href="references/RFC8126.xml"/>
+      <xi:include href="references/RFC8414.xml"/>
+      <xi:include href="references/RFC8693.xml"/>
+      <xi:include href="references/RFC8792.xml"/>
+      <xi:include href="references/RFC9396.xml"/>
+      <xi:include href="references/RFC9728.xml"/>
+      <xi:include href="references/I-D.cui-ai-agent-discovery-invocation.xml"/>
+      <xi:include href="references/I-D.rosenberg-ai-protocols.xml"/>
+      <reference anchor="JSON-SCHEMA" target="https://json-schema.org/draft/2020-12/json-schema-core">
+        <front>
+          <title>JSON Schema: A Media Type for Describing JSON Documents</title>
+          <author initials="A." surname="Wright" fullname="Austin Wright"/>
+          <author initials="H." surname="Andrews" fullname="Henry Andrews"/>
+          <author initials="B." surname="Hutton" fullname="Ben Hutton"/>
+          <author initials="G." surname="Dennis" fullname="Greg Dennis"/>
+          <date month="June" year="2022"/>
+        </front>
+        <refcontent>Draft 2020-12</refcontent>
+      </reference>
+      <reference anchor="UCP" target="https://ucp.dev/specification/overview/">
+        <front>
+          <title>Universal Commerce Protocol (UCP): Overview</title>
+          <author><organization>Universal Commerce Protocol project</organization></author>
+          <date year="2026"/>
+        </front>
+        <refcontent>version 2026-08-25</refcontent>
+      </reference>
+      <reference anchor="UCP-CATALOG" target="https://ucp.dev/specification/shopping/catalog/">
+        <front>
+          <title>Universal Commerce Protocol (UCP): Catalog</title>
+          <author><organization>Universal Commerce Protocol project</organization></author>
+          <date year="2026"/>
+        </front>
+        <refcontent>version 2026-08-25</refcontent>
+      </reference>
+      <reference anchor="ARD" target="https://github.com/ards-project/ard-spec">
+        <front>
+          <title>Agentic Resource Discovery Specification</title>
+          <author initials="J." surname="Bu" fullname="Junjie Bu"/>
+          <author initials="R.V." surname="Guha" fullname="R.V. Guha"/>
+          <author initials="S." surname="Smith" fullname="Shaun Smith"/>
+          <date day="26" month="August" year="2026"/>
+        </front>
+        <refcontent>v0.91, Proposal</refcontent>
+      </reference>
+      <reference anchor="A2A" target="https://a2a-protocol.org/latest/specification/">
+        <front>
+          <title>Agent2Agent (A2A) Protocol Specification</title>
+          <author><organization>Linux Foundation</organization></author>
+          <date/>
+        </front>
+      </reference>
+      <reference anchor="AGENT-JSON" target="https://github.com/agentwebprotocol/spec">
+        <front>
+          <title>Agent Web Protocol (AWP): agent.json</title>
+          <author><organization>Agent Web Protocol contributors</organization></author>
+          <date day="16" month="April" year="2026"/>
+        </front>
+        <refcontent>v0.2, draft</refcontent>
+      </reference>
+      <reference anchor="SCHEMAORG" target="https://schema.org/">
+        <front>
+          <title>Schema.org</title>
+          <author><organization>Schema.org</organization></author>
+          <date/>
+        </front>
+      </reference>
+    </references>
+  </references>
+
+  <section anchor="examples">
+    <name>Examples</name>
+    <t>The examples are the files that the reference implementation's tests
+    validate. Some lines are folded as described in
+    <xref target="RFC8792"/>. The domain <tt>shop.example</tt> is
+    fictitious.</t>
+    <section anchor="ex-manifest"><name>Manifest</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/manifest.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-resource"><name>Resource</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/resource.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-head"><name>Feed Head</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/head.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-part"><name>Snapshot Part</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/part.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-delta"><name>Change List</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/delta.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-query"><name>Query</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/query.json" parse="text"/></sourcecode>
+      <t>A continuation query:</t>
+      <sourcecode type="json" markers="false"><![CDATA[
+{"version": "0.1", "cursor": "kX0_3pQnV9bY2cRtL1mZ8aWf"}
+]]></sourcecode>
+    </section>
+    <section anchor="ex-result"><name>Query Response</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/result.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-problem"><name>Error</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/problem.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-capability"><name>Capability Document</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/capability.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-intent"><name>Intent</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/intent.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-quote"><name>Quote</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/quote.json" parse="text"/></sourcecode>
+    </section>
+    <section anchor="ex-operation"><name>Operation</name>
+      <sourcecode type="json" markers="false"><xi:include href="examples/operation.json" parse="text"/></sourcecode>
+    </section>
+  </section>
+
+  <section anchor="ucp-adapter">
+    <name>UCP Catalog Adapter</name>
+    <t>This appendix describes how a runtime reads a UCP catalog
+    <xref target="UCP-CATALOG"/> as ADDP resources. It covers only the
+    subset the reference implementation supports, pinned to UCP version
+    2026-08-25, and is not a UCP implementation.</t>
+    <ul>
+      <li>The runtime reads the business profile at
+      <tt>/.well-known/ucp</tt>. It requires <tt>ucp.version</tt>
+      2026-08-25, exactly one REST service of that version under
+      <tt>dev.ucp.shopping</tt> whose endpoint has the business's origin,
+      and the capabilities <tt>dev.ucp.shopping.catalog.search</tt> and
+      <tt>dev.ucp.shopping.catalog.lookup</tt> at that version.</li>
+      <li>Search is <tt>POST {endpoint}/catalog/search</tt> with
+      <tt>query</tt>, <tt>context.currency</tt> and
+      <tt>pagination.limit</tt>. The runtime does not send the user's price
+      limit; it applies hard constraints after mapping.</li>
+      <li>Each product variant becomes one resource with reference
+      (business origin, <tt>"ucp.catalog"</tt>, variant <tt>id</tt>), type
+      <tt>https://schema.org/Offer</tt>, profile
+      <tt>offer-search/0.1</tt> and revision null. The variant
+      <tt>title</tt> becomes <tt>name</tt>, <tt>price.amount</tt> and
+      <tt>price.currency</tt> become <tt>unit_price_minor</tt> and
+      <tt>currency</tt>, and a boolean <tt>availability.available</tt>
+      becomes <tt>availability</tt>. Nothing maps to <tt>condition</tt>, so
+      such resources never match a <tt>condition</tt> predicate.</li>
+      <li>Resolution is <tt>POST {endpoint}/catalog/lookup</tt> with
+      <tt>ids</tt> containing the variant ID.</li>
+      <li>The adapter adds no feed consistency, freshness or revision
+      guarantees that UCP does not provide.</li>
+    </ul>
+    <t>The fixtures the tests use:</t>
+    <sourcecode type="json" markers="false"><xi:include href="examples/ucp-profile-subset.json" parse="text"/></sourcecode>
+    <sourcecode type="json" markers="false"><xi:include href="examples/ucp-search-response.json" parse="text"/></sourcecode>
+  </section>
+
+  <section anchor="related">
+    <name>Relationship to Other Work</name>
+    <dl newline="true" spacing="normal">
+      <dt>UCP:</dt>
+      <dd>UCP covers business discovery, capability negotiation, catalog
+      search and checkout for one business <xref target="UCP"/>. The ADDP
+      manifest and query overlap with it. ADDP adds consistency rules for
+      feeds, a query whose semantics hold across indexes, re-evaluation at
+      the origin, and the runtime profile. If the experiment shows that
+      these fit into UCP, they should go there.</dd>
+      <dt>Agentic Resource Discovery (ARD):</dt>
+      <dd>ARD <xref target="ARD"/> lets domains publish catalogs of tools,
+      APIs, agents and skills at <tt>/.well-known/ard.json</tt>, and lets
+      registries crawl them and answer searches that combine natural-language
+      text with equality filters, ranked by each registry. ARD finds
+      capabilities; ADDP finds items such as offers, with typed facts. ARD
+      defines no change feeds, fixed result order or re-evaluation at the
+      origin, and it stops before invocation. An ADDP index could be listed
+      in ARD registries as an entry.</dd>
+      <dt>Agent cards and agent discovery:</dt>
+      <dd>A2A <xref target="A2A"/> publishes agent cards at the registered
+      well-known URI <tt>agent-card.json</tt>.
+      <xref target="I-D.cui-ai-agent-discovery-invocation"/> specifies
+      discovery and invocation of agents, and
+      <xref target="I-D.rosenberg-ai-protocols"/> collects requirements for
+      agent protocols. These concern finding and calling agents, which ADDP
+      does not do.</dd>
+      <dt>agent.json:</dt>
+      <dd>The Agent Web Protocol draft <xref target="AGENT-JSON"/> lets a
+      site describe its actions for agents in one JSON file, with
+      sensitivity, idempotency and authentication hints. It overlaps with
+      the ADDP manifest and capability documents. It defines no feeds, index
+      queries, re-evaluation or spending limits.</dd>
+      <dt>OAuth:</dt>
+      <dd>ADDP uses OAuth as is. Protected resource metadata
+      <xref target="RFC9728"/> and authorization server metadata
+      <xref target="RFC8414"/> help a runtime find authorization servers.
+      Rich Authorization Requests <xref target="RFC9396"/> and Token
+      Exchange <xref target="RFC8693"/> can express and narrow delegated
+      authority, if a server supports them for the operation in
+      question.</dd>
+      <dt>Tool and agent protocols:</dt>
+      <dd>Protocols that let a model call tools, or let agents call each
+      other, can serve as execution bindings. A capability names the exact
+      protocol and version, and the binding documents which of the
+      requirements in <xref target="binding-reqs"/> it meets.</dd>
+      <dt>Schema.org:</dt>
+      <dd>Resource types are Schema.org <xref target="SCHEMAORG"/> URIs. The
+      Schema.org vocabulary does not define execution semantics, which is
+      why profiles are needed.</dd>
+    </dl>
+  </section>
+
+  <section anchor="sandbox">
+    <name>Sandbox Execution Binding</name>
+    <t>The reference implementation contains a binding with protocol
+    <tt>addp-sandbox</tt>, version 0.1, operation <tt>commit</tt>. It exists
+    to test <xref target="runtime"/> and moves no money. Its service keeps
+    quotes, grants and operation outcomes in one database. In one
+    transaction it checks the grant (intent, publisher, currency, maximum
+    amount, expiry, revocation), the quote (revision, session, reference,
+    quantity, total, capability digest, expiry) and the operation
+    identifier, and records the outcome, including a rejection. It answers
+    status requests with the recorded outcome, "not found" or "conflict".
+    It meets the four requirements of <xref target="binding-reqs"/> because
+    the quote and the charge live in one database. A real payment flow
+    spreads them over several services and has to be analyzed
+    separately.</t>
+    <t>The tests cover a successful purchase; a repeated operation; a
+    response lost after the service committed; a restart of the runtime; a
+    crash after dispatch followed by a resend under the same identifier; a
+    late copy of a rejected request; an identifier held by a different
+    operation; a quote changed at the service; a changed capability
+    document, including a change of formatting only; a missing execution
+    binding; a substituted resource; two concurrent operations against one
+    limit; an expired and a revoked grant; cancellation of a pending
+    operation; and a failed refund.</t>
+  </section>
+
+  <section anchor="measurements">
+    <name>Measurements</name>
+    <t>The companion repository contains a script that builds an index of
+    20 synthetic offers from 20 publishers with the reference
+    implementation, runs a query that returns 16 of them, and forms a
+    decision view of the three cheapest new black offers. It counts the size
+    of what a model would receive, using two publicly available tokenizers
+    as proxies. The tokenizers of the models an agent actually uses may
+    count differently.</t>
+    <table anchor="tab-measure">
+      <name>Size of Model Input (Synthetic)</name>
+      <thead>
+        <tr><th>Input</th><th>Bytes</th><th>cl100k_base</th><th>o200k_base</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Query response, 16 candidates, indented JSON</td><td>10492</td><td>3215</td><td>3199</td></tr>
+        <tr><td>Same, compact JSON</td><td>7496</td><td>2226</td><td>2243</td></tr>
+        <tr><td>Same data, CSV</td><td>3616</td><td>1414</td><td>1414</td></tr>
+        <tr><td>Decision view, 3 candidates</td><td>1127</td><td>315</td><td>318</td></tr>
+      </tbody>
+    </table>
+    <t>The CSV row holds the same data as the JSON rows and converts back to
+    it without loss. The decision view holds less: the runtime filtered and
+    ranked before the model saw anything. These numbers say nothing about
+    whether a model decides correctly with the smaller input. That requires
+    task-level tests on named models, which have not been done.</t>
+  </section>
+
+  <section anchor="open-issues">
+    <name>Open Issues</name>
+    <ul>
+      <li>Is ADDP needed as a protocol, or should the feed rules, the query
+      semantics and the runtime profile become profiles of UCP, ARD and
+      OAuth?</li>
+      <li>Whether a runtime should also bootstrap from ARD catalogs,
+      agent.json files or UCP profiles, and how an index advertises itself
+      in ARD registries.</li>
+      <li>How new resource and operation profiles are added without a new
+      protocol version, and whether profiles and error codes need IANA
+      registries <xref target="RFC8126"/>.</li>
+      <li>Signed feeds, so that an index can pass on a publisher's records
+      and a client can verify them without contacting the publisher.</li>
+      <li>Hosting a manifest or feed on another origin, as needed by content
+      delivery networks and platforms that host many shops.</li>
+      <li>Predicates for location, shipping destination and dates, and a
+      semantic search mode with defined behaviour.</li>
+      <li>Bindings for real checkout and payment protocols, and whether any
+      of them meets <xref target="binding-reqs"/> today.</li>
+      <li>Task-level measurements of the model views on named models.</li>
+      <li>Push delivery of feed changes.</li>
+      <li>Implementations built on different versions of Unicode can
+      disagree on text matching for newly assigned characters.</li>
+    </ul>
+  </section>
+</back>
+</rfc>

@@ -1,0 +1,3 @@
+# LF everywhere. Examples carry SHA-256 digests of exact file bytes, so a
+# checkout that converted line endings would make those digests wrong.
+* text=auto eol=lf

@@ -1,0 +1,23 @@
+{
+  "version": "0.1",
+  "id": "https://shop.example/addp/capabilities/checkout",
+  "profile": "sandbox-purchase/0.1",
+  "revision": "c1",
+  "input_schema": {
+    "url": "https://shop.example/schemas/operation.json",
+    "sha256": "ee72dbdd5b2c1edb108c02919e6fa6ce130ed1c3dbab88495c59256a78d29ae2"
+  },
+  "output_schema": {
+    "url": "https://shop.example/schemas/outcome.json",
+    "sha256": "c082a52ca2bafd2d8f00d5b372ac4b3d092a3ae24832caa40d831911e13294ff"
+  },
+  "effects": [
+    "creates_sandbox_order"
+  ],
+  "binding": {
+    "protocol": "addp-sandbox",
+    "protocol_version": "0.1",
+    "endpoint": "https://shop.example/sandbox",
+    "operation": "commit"
+  }
+}

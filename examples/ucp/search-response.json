@@ -1,0 +1,24 @@
+{
+  "ucp": {
+    "version": "2026-08-25"
+  },
+  "products": [
+    {
+      "id": "prod_bananas",
+      "title": "Bananas",
+      "variants": [
+        {
+          "id": "var_bananas",
+          "title": "Bananas",
+          "price": {
+            "amount": 79,
+            "currency": "USD"
+          },
+          "availability": {
+            "available": true
+          }
+        }
+      ]
+    }
+  ]
+}

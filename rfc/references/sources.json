@@ -1,0 +1,86 @@
+{
+  "RFC2119": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml",
+    "sha256": "a72c4bff7ddb38de3316cc4fd2449dd92ecf1d07c71b265860dcaf659be0d65c"
+  },
+  "RFC3339": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3339.xml",
+    "sha256": "5e8e3677daaa88eaebfc13090d7c2c5dfceec1f4b0fe702f11ba464e4e93e9b1"
+  },
+  "RFC3552": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3552.xml",
+    "sha256": "793310f59a55d492dad1b6319139a74247ff3284f90b6ff7e5991244c8135596"
+  },
+  "RFC3986": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3986.xml",
+    "sha256": "d2db8368297e37abb3071a2d69486a8227175b6659232531ffeb6ad649a3cdfb"
+  },
+  "RFC4648": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4648.xml",
+    "sha256": "c3ac177ff8a975c308b93a1edf70fe932ecfe2531e31483961032b6d6c44d3f5"
+  },
+  "RFC6454": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6454.xml",
+    "sha256": "f194b093cba22a23d06e216be979691b8c43199752eabf53b993d0b4fb238ec5"
+  },
+  "RFC6973": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6973.xml",
+    "sha256": "f08a08ce3210188e6ae2c17319c001ec0c6a99c4dd0de2186a3c4024759d6e80"
+  },
+  "RFC7493": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7493.xml",
+    "sha256": "52926ea8c82f7d2c4a389aee0d0d3257fdb97114c077901d55fe55895bf973b8"
+  },
+  "RFC8126": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml",
+    "sha256": "ba99752831aa01a74b868d5369e165143a78781fb2445e13d2ffe57e2a7663b1"
+  },
+  "RFC8174": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml",
+    "sha256": "171da043d2e3ebc3f8e5569ede0d0493a5ad0881728166f025767243478fc83e"
+  },
+  "RFC8259": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8259.xml",
+    "sha256": "a97d20151d7bea1bca9bccd669809312bc1e32b360278309fc71365275cea399"
+  },
+  "RFC8414": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8414.xml",
+    "sha256": "aac74f74a8cb962b4670c113cb816c600d619fdc96bc63d985031b239e32457f"
+  },
+  "RFC8615": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8615.xml",
+    "sha256": "e6a2a2cc062f228b9d137f77e61834f0706f45f299ba3f78327a6ab12300f409"
+  },
+  "RFC8693": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8693.xml",
+    "sha256": "eb5435382478ee2d84d9da8bbbb4c941006116b037248083f75b9b40399c7931"
+  },
+  "RFC8792": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8792.xml",
+    "sha256": "84b2b871c13a0febde2f5c675d5fd387fae99bff1d15f3df9c7551f9e87d0560"
+  },
+  "RFC9110": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9110.xml",
+    "sha256": "5a396fa4e580335c96875240b360ece58b72ef35777ed08703fff084314275c2"
+  },
+  "RFC9396": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9396.xml",
+    "sha256": "e893dbc85c94fec7d42c90c341c1922afc82f1cdad64af694665ca539de6b18e"
+  },
+  "RFC9457": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9457.xml",
+    "sha256": "3b24fac7ed885ece1eb4cb3b457438d5c740d824be964b85ce4b69f26bc15402"
+  },
+  "RFC9728": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.9728.xml",
+    "sha256": "fdc0541f6a903d013779aafce775dc1d72baada0ac63862c0935346f998a933f"
+  },
+  "I-D.cui-ai-agent-discovery-invocation": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.draft-cui-ai-agent-discovery-invocation-02.xml",
+    "sha256": "73ef7e5e4a0c4ece97272825c48ec692176775db9b6f28c6a51d03856810b86f"
+  },
+  "I-D.rosenberg-ai-protocols": {
+    "url": "https://bib.ietf.org/public/rfc/bibxml3/reference.I-D.draft-rosenberg-ai-protocols-00.xml",
+    "sha256": "3e8d0f1cec7cc5acf6b53150cf68b8bccce306e949b79db141437d1590286ef5"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "epoch": "e1",
+  "snapshot": {
+    "id": "s1",
+    "through": 10,
+    "parts": [
+      "https://shop.example/addp/feed/s1/1"
+    ],
+    "expires_at": "2030-01-02T00:00:00Z"
+  },
+  "changes": "https://shop.example/addp/feed/changes"
+}

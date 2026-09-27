@@ -1,0 +1,19 @@
+<reference anchor="I-D.cui-ai-agent-discovery-invocation" target="https://datatracker.ietf.org/doc/html/draft-cui-ai-agent-discovery-invocation-02">
+  <front>
+    <title>AI Agent Discovery and Invocation Protocol</title>
+    <author fullname="Yong Cui" initials="Y." surname="Cui">
+      <organization>Tsinghua University</organization>
+    </author>
+    <author fullname="Yihan Chao" initials="Y." surname="Chao">
+      <organization>Zhongguancun Laboratory</organization>
+    </author>
+    <author fullname="Chenguang Du" initials="C." surname="Du">
+      <organization>Zhongguancun Laboratory</organization>
+    </author>
+    <date day="6" month="July" year="2026"/>
+    <abstract>
+      <t>This document proposes a standardized protocol for discovery and invocation of AI agents. It defines a common metadata format for describing AI agents (including capabilities, I/O specifications, supported languages, tags, authentication methods, etc.), a capability-based discovery mechanism, and a unified RESTful invocation interface. This revision refines the discovery mechanism by defining fields for intent-based agent selection. This capability enables a client, host agent, or orchestration system to describe a task intent and receive a ranked set of candidate agents before invocation, without changing existing discovery or invocation semantics. The goal is to enable cross-platform interoperability among AI agents by providing a discover-and-match mechanism and a unified invocation entry point. Security considerations, including authentication and trust measures, are also discussed. This specification aims to facilitate the formation of multi-agent systems by making it easy to find the right agent for a task and invoke it in a consistent manner across different vendors and platforms. Intent-based selection is an application-layer capability and does not define network routing, packet forwarding, path computation, reachability advertisement, or address resolution.</t>
+    </abstract>
+  </front>
+  <seriesInfo name="Internet-Draft" value="draft-cui-ai-agent-discovery-invocation-02"/>
+</reference>

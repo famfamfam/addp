@@ -1,0 +1,23 @@
+{
+  "schema": "quote",
+  "instance": {
+    "version": "0.1",
+    "id": "qt1",
+    "revision": "1",
+    "session": "s_checkout_1",
+    "ref": {
+      "publisher": "https://shop.example",
+      "namespace": "addp",
+      "id": "https://shop.example/addp/resources/o17"
+    },
+    "quantity": 1,
+    "total": {
+      "amount_minor": 33399,
+      "currency": "XTS"
+    },
+    "total_scope": "merchant_total",
+    "capability_digest": "4f47a5fea0d7ad71540ff2d7f0c5d1f4bcbda629057e9837b6c02aab98be2c38",
+    "expires_at": "2030-01-02T00:00:00Z"
+  },
+  "error": "invalid_message"
+}

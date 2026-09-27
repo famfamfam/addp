@@ -1,0 +1,43 @@
+{
+  "scenario": "20 synthetic offers across 20 publishers; task: three cheapest new black offers",
+  "result_items": 16,
+  "view_items": 3,
+  "tokenizers": {
+    "cl100k_base": "proxy tokenizer; not the tokenizer of any particular target model",
+    "o200k_base": "proxy tokenizer; not the tokenizer of any particular target model"
+  },
+  "measurements": {
+    "result_json_pretty": {
+      "utf8_bytes": 10492,
+      "gzip_bytes": 632,
+      "tokens": {
+        "cl100k_base": 3215,
+        "o200k_base": 3199
+      }
+    },
+    "result_json_compact": {
+      "utf8_bytes": 7496,
+      "gzip_bytes": 576,
+      "tokens": {
+        "cl100k_base": 2226,
+        "o200k_base": 2243
+      }
+    },
+    "result_csv_same_data": {
+      "utf8_bytes": 3616,
+      "gzip_bytes": 465,
+      "tokens": {
+        "cl100k_base": 1414,
+        "o200k_base": 1414
+      }
+    },
+    "decision_view_json_compact": {
+      "utf8_bytes": 1127,
+      "gzip_bytes": 364,
+      "tokens": {
+        "cl100k_base": 315,
+        "o200k_base": 318
+      }
+    }
+  }
+}

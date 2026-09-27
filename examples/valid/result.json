@@ -1,0 +1,28 @@
+{
+  "version": "0.1",
+  "snapshot": "q1",
+  "items": [
+    {
+      "ref": {
+        "publisher": "https://shop.example",
+        "namespace": "addp",
+        "id": "https://shop.example/addp/resources/o17"
+      },
+      "type": "https://schema.org/Offer",
+      "profile": "offer-search/0.1",
+      "source_revision": "r8",
+      "retrieved_at": "2030-01-01T00:00:00Z",
+      "indexed_at": "2030-01-01T00:00:00Z",
+      "valid_until": null,
+      "facts": {
+        "name": "Sony WH-1000XM6, black",
+        "unit_price_minor": 32900,
+        "currency": "EUR",
+        "condition": "new",
+        "availability": "in_stock"
+      },
+      "paid_inclusion": "unknown"
+    }
+  ],
+  "next_cursor": null
+}
