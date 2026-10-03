@@ -1,0 +1,12 @@
+# Internal planning stays with the working copy, never in a publication.
+/notes/
+/work/
+/.venv/
+/.pytest_cache/
+**/__pycache__/
+*.py[cod]
+/build/
+/.env
+/.env.*
+!.env.example
+*.log

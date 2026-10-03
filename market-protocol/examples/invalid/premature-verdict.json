@@ -1,0 +1,16 @@
+{
+  "version": "0.1",
+  "kind": "ClaimCheck",
+  "id": "urn:amp:example:claim-check",
+  "issued_at": "2026-10-10T11:00:00Z",
+  "community": "https://community.example/identity",
+  "subject": "urn:amp:example:product",
+  "claim": "All units have a defective keyboard",
+  "policy_id": "urn:amp:example:community-policy",
+  "state": "reviewing",
+  "conclusion": "inconclusive",
+  "evidence_refs": [
+    "urn:amp:example:review"
+  ],
+  "reason": "One fictional report cannot establish a model-wide defect"
+}

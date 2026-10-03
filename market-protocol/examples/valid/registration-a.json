@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "kind": "CatalogRegistration",
+  "id": "urn:amp:example:registration-a",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "registry_id": "urn:amp:registry:documentary:1",
+  "catalog_id": "https://seller-a.example/catalog",
+  "owner": "https://seller-a.example/identity",
+  "publishing_keys": [
+    "https://keys.example/seller-a"
+  ],
+  "revision": 1,
+  "manifest_url": "https://seller-a.example/manifest",
+  "commitment": "6b7657ac49b1d3f63b19799a14fe685a39b448ad2ac68d014a3510e9f54fe70d",
+  "lease_expires_at": "2026-11-02T10:00:00Z",
+  "state": "active",
+  "checkpoint_id": "urn:amp:example:checkpoint",
+  "fee_schedule_id": "urn:amp:example:fee"
+}

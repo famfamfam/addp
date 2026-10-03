@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "kind": "AbuseReport",
+  "id": "urn:amp:example:abuse-report",
+  "issued_at": "2026-10-10T12:00:00Z",
+  "reporter": "urn:amp:reviewer:2",
+  "subject": "urn:amp:example:community-review",
+  "policy_id": "urn:amp:example:community-policy",
+  "reason": "Report appears to generalize one account",
+  "evidence_refs": [
+    "urn:amp:example:claim-check"
+  ]
+}

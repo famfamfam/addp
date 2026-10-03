@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "kind": "CommunityReview",
+  "id": "urn:amp:example:community-review",
+  "issued_at": "2026-10-10T10:00:00Z",
+  "author": "urn:amp:reviewer:1",
+  "subject": "urn:amp:example:product",
+  "policy_id": "urn:amp:example:community-policy",
+  "text": "Illustrative inspection report",
+  "method": "Documentary example; no physical test",
+  "evidence_refs": [
+    "urn:amp:example:review"
+  ],
+  "conflicts": [
+    "No real test was conducted"
+  ]
+}

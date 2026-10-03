@@ -1,0 +1,21 @@
+{
+  "version": "0.1",
+  "kind": "PriceObservation",
+  "id": "urn:amp:example:price-observation",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "offer_id": "https://seller-a.example/offers/demo-14",
+  "source": "https://seller-a.example/identity",
+  "observed_at": "2026-10-03T10:00:00Z",
+  "scope": "public",
+  "price": {
+    "amount": 89900,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "included_charges": [
+    "item, tax included in displayed price"
+  ],
+  "unknown_costs": [
+    "delivery"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "kind": "Appeal",
+  "id": "urn:amp:example:appeal",
+  "issued_at": "2026-10-11T10:00:00Z",
+  "decision_id": "urn:amp:example:decision",
+  "appellant": "urn:amp:buyer:seller-a:demo",
+  "grounds": "Correct the interpretation of the example",
+  "evidence_refs": [
+    "urn:amp:example:community-review"
+  ],
+  "state": "accepted"
+}

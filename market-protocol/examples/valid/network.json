@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "kind": "NetworkDescriptor",
+  "id": "urn:amp:example:network",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "registry_id": "urn:amp:registry:documentary:1",
+  "chain_profile": "urn:amp:chain:documentary:1",
+  "token_asset": "urn:amp:asset:documentary:1:test-token",
+  "bootstrap_indexes": [
+    "https://index-a.example/descriptor",
+    "https://index-b.example/descriptor"
+  ],
+  "profile_status": "documentary",
+  "policy_url": "https://network.example/policy",
+  "max_unanchored_seconds": 300
+}

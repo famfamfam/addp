@@ -1,0 +1,18 @@
+{
+  "version": "0.1",
+  "kind": "ReputationAssessment",
+  "id": "urn:amp:example:assessment",
+  "issued_at": "2026-10-11T11:00:00Z",
+  "subject": "https://seller-a.example/identity",
+  "policy_id": "urn:amp:example:issuer-policy",
+  "input_refs": [
+    "urn:amp:example:review"
+  ],
+  "review_count": 1,
+  "overlap": "unknown",
+  "conclusion": "Insufficient real-world evidence",
+  "limitations": [
+    "All events are simulated",
+    "Buyer independence is not established"
+  ]
+}

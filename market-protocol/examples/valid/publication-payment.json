@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "kind": "PublicationPayment",
+  "id": "urn:amp:example:publication-payment",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "operation_id": "urn:amp:operation:register-a",
+  "catalog_id": "https://seller-a.example/catalog",
+  "payer": "https://seller-a.example/identity",
+  "recipient": "urn:amp:treasury:documentary",
+  "fee_schedule_id": "urn:amp:example:fee",
+  "charge": {
+    "asset": "urn:amp:asset:documentary:1:test-token",
+    "units": "100"
+  },
+  "state": "simulated",
+  "receipt_ref": "urn:amp:receipt:documentary-registration"
+}

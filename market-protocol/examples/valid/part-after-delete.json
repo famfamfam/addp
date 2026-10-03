@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "kind": "SnapshotPart",
+  "id": "https://seller-a.example/snapshot/3/part-1",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "catalog_id": "https://seller-a.example/catalog",
+  "epoch": "epoch-1",
+  "snapshot_id": "https://seller-a.example/snapshot/3",
+  "through": 3,
+  "offers": [],
+  "tombstones": [
+    {
+      "offer_id": "https://seller-a.example/offers/demo-14",
+      "revision": 3
+    }
+  ]
+}

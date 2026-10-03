@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "FeeSchedule",
+  "id": "urn:amp:example:fee",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "revision": 1,
+  "resource_class": "demo-small",
+  "period_seconds": 2592000,
+  "fee": {
+    "asset": "urn:amp:asset:documentary:1:test-token",
+    "units": "100"
+  },
+  "recipient": "urn:amp:treasury:documentary",
+  "valid_from": "2026-10-03T10:00:00Z",
+  "valid_until": "2026-11-03T10:00:00Z",
+  "max_offers": 1000,
+  "max_bytes": 10485760
+}

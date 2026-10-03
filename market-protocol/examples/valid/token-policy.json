@@ -1,0 +1,21 @@
+{
+  "version": "0.1",
+  "kind": "TokenPolicy",
+  "id": "urn:amp:example:token-policy",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "asset": "urn:amp:asset:documentary:1:test-token",
+  "uses": [
+    "registration",
+    "renewal",
+    "search",
+    "storage"
+  ],
+  "status": "documentary",
+  "fee_authority": "urn:amp:authority:undecided",
+  "mint_authority": "urn:amp:authority:undecided",
+  "governance_url": "https://network.example/undecided/governance",
+  "supply_disclosure_url": "https://network.example/undecided/supply",
+  "allocation_disclosure_url": "https://network.example/undecided/allocation",
+  "upgrade_disclosure_url": "https://network.example/undecided/upgrades"
+}

@@ -1,0 +1,237 @@
+{
+  "as_of": "2026-10-03T12:00:00Z",
+  "all_external_events": "simulated",
+  "valid": [
+    "valid/network.json",
+    "valid/checkpoint.json",
+    "valid/key-seller-a.json",
+    "valid/key-issuer.json",
+    "valid/key-buyer.json",
+    "valid/key-community.json",
+    "valid/discovery.json",
+    "valid/product.json",
+    "valid/variant.json",
+    "valid/fee.json",
+    "valid/seller-a.json",
+    "valid/offer-a.json",
+    "valid/part-a.json",
+    "valid/snapshot-a.json",
+    "valid/manifest-a.json",
+    "valid/registration-a.json",
+    "valid/seller-b.json",
+    "valid/offer-b.json",
+    "valid/part-b.json",
+    "valid/snapshot-b.json",
+    "valid/manifest-b.json",
+    "valid/registration-b.json",
+    "valid/seller-c.json",
+    "valid/offer-c.json",
+    "valid/part-c.json",
+    "valid/snapshot-c.json",
+    "valid/manifest-c.json",
+    "valid/registration-c.json",
+    "valid/registry-operation.json",
+    "valid/publication-payment.json",
+    "valid/delta-upsert.json",
+    "valid/delta-delete.json",
+    "valid/part-after-delete.json",
+    "valid/snapshot-after-delete.json",
+    "valid/manifest-after-delete.json",
+    "valid/index-a.json",
+    "valid/index-b.json",
+    "valid/query.json",
+    "valid/search-result.json",
+    "valid/quote-request.json",
+    "valid/quote.json",
+    "valid/authorization.json",
+    "valid/attribution.json",
+    "valid/order-request.json",
+    "valid/order.json",
+    "valid/operation-lookup.json",
+    "valid/order-lookup.json",
+    "valid/operation-status.json",
+    "valid/refund-request.json",
+    "valid/payment.json",
+    "valid/delivery.json",
+    "valid/refund.json",
+    "valid/issuer-policy.json",
+    "valid/evidence.json",
+    "valid/price-observation.json",
+    "valid/sales-observation.json",
+    "valid/eligibility.json",
+    "valid/review.json",
+    "valid/community-policy.json",
+    "valid/community-review.json",
+    "valid/claim-check.json",
+    "valid/abuse-report.json",
+    "valid/decision.json",
+    "valid/decision-after-appeal.json",
+    "valid/appeal.json",
+    "valid/assessment.json",
+    "valid/service-quote.json",
+    "valid/token-policy.json",
+    "valid/error.json",
+    "valid/after-sales-authorization.json"
+  ],
+  "signed": [
+    {
+      "file": "signed/manifest-a.json",
+      "key": "valid/key-seller-a.json",
+      "role": "publisher",
+      "as_of": "2026-10-03T12:00:00Z"
+    },
+    {
+      "file": "signed/delta-upsert.json",
+      "key": "valid/key-seller-a.json",
+      "role": "publisher",
+      "as_of": "2026-10-03T12:00:00Z"
+    },
+    {
+      "file": "signed/quote.json",
+      "key": "valid/key-seller-a.json",
+      "role": "checkout",
+      "as_of": "2026-10-03T12:00:00Z"
+    },
+    {
+      "file": "signed/evidence.json",
+      "key": "valid/key-issuer.json",
+      "role": "evidence",
+      "as_of": "2026-10-03T12:00:00Z"
+    },
+    {
+      "file": "signed/eligibility.json",
+      "key": "valid/key-issuer.json",
+      "role": "evidence",
+      "as_of": "2026-10-03T12:00:00Z"
+    },
+    {
+      "file": "signed/review.json",
+      "key": "valid/key-buyer.json",
+      "role": "review",
+      "as_of": "2026-10-07T10:00:00Z"
+    },
+    {
+      "file": "signed/decision.json",
+      "key": "valid/key-community.json",
+      "role": "community",
+      "as_of": "2026-10-10T13:00:00Z"
+    }
+  ],
+  "invalid": [
+    {
+      "file": "invalid/negative-money.json",
+      "stage": "schema",
+      "error": "schema_invalid"
+    },
+    {
+      "file": "invalid/float-money.json",
+      "stage": "schema",
+      "error": "schema_invalid"
+    },
+    {
+      "file": "invalid/unknown-field.json",
+      "stage": "schema",
+      "error": "schema_invalid"
+    },
+    {
+      "file": "invalid/wrong-version.json",
+      "stage": "schema",
+      "error": "schema_invalid"
+    },
+    {
+      "file": "invalid/bad-timestamp.json",
+      "stage": "schema",
+      "error": "schema_invalid"
+    },
+    {
+      "file": "invalid/quote-total.json",
+      "stage": "semantic",
+      "error": "quote_total_mismatch"
+    },
+    {
+      "file": "invalid/quote-currency.json",
+      "stage": "semantic",
+      "error": "currency_mismatch"
+    },
+    {
+      "file": "invalid/hidden-cost.json",
+      "stage": "semantic",
+      "error": "unknown_delivered_cost"
+    },
+    {
+      "file": "invalid/feed-gap.json",
+      "stage": "semantic",
+      "error": "sequence_gap"
+    },
+    {
+      "file": "invalid/offer-mismatch.json",
+      "stage": "semantic",
+      "error": "change_identity"
+    },
+    {
+      "file": "invalid/unsupported-filter.json",
+      "stage": "semantic",
+      "error": "unsupported_filter"
+    },
+    {
+      "file": "invalid/wrong-filter-type.json",
+      "stage": "semantic",
+      "error": "filter_value_type"
+    },
+    {
+      "file": "invalid/hidden-source-failure.json",
+      "stage": "semantic",
+      "error": "hidden_partial_failure"
+    },
+    {
+      "file": "invalid/duplicate-snapshot-offer.json",
+      "stage": "semantic",
+      "error": "duplicate_offer"
+    },
+    {
+      "file": "invalid/service-overspend.json",
+      "stage": "semantic",
+      "error": "service_budget_exceeded"
+    },
+    {
+      "file": "invalid/unlinked-review-edit.json",
+      "stage": "semantic",
+      "error": "review_revision_link"
+    },
+    {
+      "file": "invalid/premature-verdict.json",
+      "stage": "semantic",
+      "error": "claim_conclusion_state"
+    },
+    {
+      "file": "invalid/missing-appeal-result.json",
+      "stage": "semantic",
+      "error": "appeal_replacement"
+    },
+    {
+      "file": "invalid/wrong-registry-fields.json",
+      "stage": "semantic",
+      "error": "registry_action_fields"
+    },
+    {
+      "file": "invalid/false-operation-success.json",
+      "stage": "semantic",
+      "error": "operation_result_state"
+    },
+    {
+      "file": "invalid/unbounded-feed-range.json",
+      "stage": "semantic",
+      "error": "sequence_gap"
+    },
+    {
+      "file": "invalid/live-deleted-collision.json",
+      "stage": "semantic",
+      "error": "duplicate_offer"
+    },
+    {
+      "file": "invalid/missing-destination-consent.json",
+      "stage": "semantic",
+      "error": "authorization_destination_scope"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "version": "0.1",
+  "kind": "KeyDescriptor",
+  "id": "https://keys.example/issuer",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "owner": "https://issuer.example/identity",
+  "jwk": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "PESzmPGJdSJwfo9U4OR4rIsxNyZZrMUCJ0iOM5j_bk0"
+  },
+  "valid_from": "2026-10-01T00:00:00Z",
+  "valid_until": "2027-10-01T00:00:00Z",
+  "status": "active",
+  "roles": [
+    "evidence"
+  ]
+}

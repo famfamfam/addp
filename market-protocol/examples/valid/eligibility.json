@@ -1,0 +1,16 @@
+{
+  "version": "0.1",
+  "kind": "ReviewEligibility",
+  "id": "urn:amp:example:eligibility",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "issuer": "https://issuer.example/identity",
+  "order_id": "urn:amp:example:order",
+  "line_id": "urn:amp:line:1",
+  "seller_id": "https://seller-a.example/identity",
+  "buyer_subject": "urn:amp:buyer:seller-a:demo",
+  "policy_id": "urn:amp:example:issuer-policy",
+  "evidence_refs": [
+    "urn:amp:example:evidence"
+  ],
+  "expires_at": "2026-12-01T00:00:00Z"
+}

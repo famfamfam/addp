@@ -1,0 +1,22 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "CatalogManifest",
+    "id": "https://seller-a.example/manifest",
+    "issued_at": "2026-10-03T10:00:00Z",
+    "catalog_id": "https://seller-a.example/catalog",
+    "seller_id": "https://seller-a.example/identity",
+    "publisher": "https://seller-a.example/identity",
+    "revision": 1,
+    "epoch": "epoch-1",
+    "head": 1,
+    "oldest_sequence": 2,
+    "category_profile": "laptops/0.1",
+    "snapshot_url": "https://seller-a.example/snapshot/1",
+    "snapshot_sha256": "00028044171b83f48c87c12371170ea7b21749e1ac53bd39d27b11c5d4d12684",
+    "changes_url": "https://seller-a.example/changes",
+    "mirror_urls": [],
+    "rights_url": "https://seller-a.example/reuse-terms"
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvc2VsbGVyLWEiLCJ0eXAiOiJhbXArandzIn0.eyJjYXRhbG9nX2lkIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL2NhdGFsb2ciLCJjYXRlZ29yeV9wcm9maWxlIjoibGFwdG9wcy8wLjEiLCJjaGFuZ2VzX3VybCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9jaGFuZ2VzIiwiZXBvY2giOiJlcG9jaC0xIiwiaGVhZCI6MSwiaWQiOiJodHRwczovL3NlbGxlci1hLmV4YW1wbGUvbWFuaWZlc3QiLCJpc3N1ZWRfYXQiOiIyMDI2LTEwLTAzVDEwOjAwOjAwWiIsImtpbmQiOiJDYXRhbG9nTWFuaWZlc3QiLCJtaXJyb3JfdXJscyI6W10sIm9sZGVzdF9zZXF1ZW5jZSI6MiwicHVibGlzaGVyIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL2lkZW50aXR5IiwicmV2aXNpb24iOjEsInJpZ2h0c191cmwiOiJodHRwczovL3NlbGxlci1hLmV4YW1wbGUvcmV1c2UtdGVybXMiLCJzZWxsZXJfaWQiOiJodHRwczovL3NlbGxlci1hLmV4YW1wbGUvaWRlbnRpdHkiLCJzbmFwc2hvdF9zaGEyNTYiOiIwMDAyODA0NDE3MWI4M2Y0OGM4N2MxMjM3MTE3MGVhN2IyMTc0OWUxYWM1M2JkMzlkMjdiMTFjNWQ0ZDEyNjg0Iiwic25hcHNob3RfdXJsIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL3NuYXBzaG90LzEiLCJ2ZXJzaW9uIjoiMC4xIn0.jkc3pM5T-5tPeV_d7rADqi14HnDJlGRSebCEnsGNuCLyOvpXtGDSCPCKWX5TMkBLW-r1IL21hvrT-UcpQ8-yDg"
+}

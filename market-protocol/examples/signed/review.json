@@ -1,0 +1,18 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "BuyerReview",
+    "id": "urn:amp:example:review",
+    "issued_at": "2026-10-07T10:00:00Z",
+    "eligibility_id": "urn:amp:example:eligibility",
+    "seller_id": "https://seller-a.example/identity",
+    "product_id": "urn:amp:example:product",
+    "buyer_subject": "urn:amp:buyer:seller-a:demo",
+    "revision": 1,
+    "rating": 2,
+    "text": "Fictional buyer reports a keyboard defect.",
+    "experience_basis": "buyer_reported",
+    "conflicts": []
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvYnV5ZXIiLCJ0eXAiOiJhbXArandzIn0.eyJidXllcl9zdWJqZWN0IjoidXJuOmFtcDpidXllcjpzZWxsZXItYTpkZW1vIiwiY29uZmxpY3RzIjpbXSwiZWxpZ2liaWxpdHlfaWQiOiJ1cm46YW1wOmV4YW1wbGU6ZWxpZ2liaWxpdHkiLCJleHBlcmllbmNlX2Jhc2lzIjoiYnV5ZXJfcmVwb3J0ZWQiLCJpZCI6InVybjphbXA6ZXhhbXBsZTpyZXZpZXciLCJpc3N1ZWRfYXQiOiIyMDI2LTEwLTA3VDEwOjAwOjAwWiIsImtpbmQiOiJCdXllclJldmlldyIsInByb2R1Y3RfaWQiOiJ1cm46YW1wOmV4YW1wbGU6cHJvZHVjdCIsInJhdGluZyI6MiwicmV2aXNpb24iOjEsInNlbGxlcl9pZCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9pZGVudGl0eSIsInRleHQiOiJGaWN0aW9uYWwgYnV5ZXIgcmVwb3J0cyBhIGtleWJvYXJkIGRlZmVjdC4iLCJ2ZXJzaW9uIjoiMC4xIn0.RH3paAUy814ym9XBaOv047xRVb5br9QSJIGF82OCG2Ip7_hkvGxRcGorDgCyCSHz41_TZ3gPPoJr_zhz82jWCQ"
+}

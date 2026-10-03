@@ -1,0 +1,20 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "EvidenceStatement",
+    "id": "urn:amp:example:evidence",
+    "issued_at": "2026-10-03T10:00:00Z",
+    "issuer": "https://issuer.example/identity",
+    "subject": "urn:amp:buyer:seller-a:demo",
+    "order_id": "urn:amp:example:order",
+    "line_id": "urn:amp:line:1",
+    "claim_type": "payment_captured",
+    "observed_at": "2026-10-03T10:00:00Z",
+    "evidence_level": "simulated",
+    "audience": "https://community.example/identity",
+    "nonce": "documentary-challenge-1",
+    "expires_at": "2026-10-04T10:00:00Z",
+    "source_ref": "urn:amp:example:payment"
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvaXNzdWVyIiwidHlwIjoiYW1wK2p3cyJ9.eyJhdWRpZW5jZSI6Imh0dHBzOi8vY29tbXVuaXR5LmV4YW1wbGUvaWRlbnRpdHkiLCJjbGFpbV90eXBlIjoicGF5bWVudF9jYXB0dXJlZCIsImV2aWRlbmNlX2xldmVsIjoic2ltdWxhdGVkIiwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDRUMTA6MDA6MDBaIiwiaWQiOiJ1cm46YW1wOmV4YW1wbGU6ZXZpZGVuY2UiLCJpc3N1ZWRfYXQiOiIyMDI2LTEwLTAzVDEwOjAwOjAwWiIsImlzc3VlciI6Imh0dHBzOi8vaXNzdWVyLmV4YW1wbGUvaWRlbnRpdHkiLCJraW5kIjoiRXZpZGVuY2VTdGF0ZW1lbnQiLCJsaW5lX2lkIjoidXJuOmFtcDpsaW5lOjEiLCJub25jZSI6ImRvY3VtZW50YXJ5LWNoYWxsZW5nZS0xIiwib2JzZXJ2ZWRfYXQiOiIyMDI2LTEwLTAzVDEwOjAwOjAwWiIsIm9yZGVyX2lkIjoidXJuOmFtcDpleGFtcGxlOm9yZGVyIiwic291cmNlX3JlZiI6InVybjphbXA6ZXhhbXBsZTpwYXltZW50Iiwic3ViamVjdCI6InVybjphbXA6YnV5ZXI6c2VsbGVyLWE6ZGVtbyIsInZlcnNpb24iOiIwLjEifQ.htlqLfYnSlQdBrkNUcK9Yec-2gDtcxuXRcz7LGpeGIdNqBYDbwDif5CzbcuSq3qYdmbs2BGOceAWlL9BKNeiCQ"
+}

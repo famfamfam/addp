@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "kind": "EvidenceStatement",
+  "id": "urn:amp:example:evidence",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "issuer": "https://issuer.example/identity",
+  "subject": "urn:amp:buyer:seller-a:demo",
+  "order_id": "urn:amp:example:order",
+  "line_id": "urn:amp:line:1",
+  "claim_type": "payment_captured",
+  "observed_at": "2026-10-03T10:00:00Z",
+  "evidence_level": "simulated",
+  "audience": "https://community.example/identity",
+  "nonce": "documentary-challenge-1",
+  "expires_at": "2026-10-04T10:00:00Z",
+  "source_ref": "urn:amp:example:payment"
+}

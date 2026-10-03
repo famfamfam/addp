@@ -1,0 +1,29 @@
+{
+  "version": "0.1",
+  "kind": "Discovery",
+  "id": "urn:amp:example:discovery",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "operator": "https://seller-a.example/identity",
+  "network_id": "urn:amp:network:documentary:1",
+  "roles": [
+    "publisher",
+    "checkout"
+  ],
+  "endpoints": {
+    "quote": "https://seller-a.example/amp/quote",
+    "order_create": "https://seller-a.example/amp/orders",
+    "operation_lookup": "https://seller-a.example/amp/operations/lookup",
+    "order_lookup": "https://seller-a.example/amp/orders/lookup",
+    "order_action": "https://seller-a.example/amp/orders/action"
+  },
+  "profiles": [
+    "laptops/0.1"
+  ],
+  "required_extensions": [],
+  "auth_bindings": [
+    "urn:amp:binding:documentary-only"
+  ],
+  "max_request_bytes": 65536,
+  "max_response_bytes": 1048576,
+  "idempotency_retention_seconds": 604800
+}

@@ -1,0 +1,22 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "ModerationDecision",
+    "id": "urn:amp:example:decision",
+    "issued_at": "2026-10-10T13:00:00Z",
+    "community": "https://community.example/identity",
+    "subject": "urn:amp:example:community-review",
+    "policy_id": "urn:amp:example:community-policy",
+    "revision": 1,
+    "action": "annotate",
+    "reason": "Limited documentary evidence",
+    "reviewers": [
+      "urn:amp:reviewer:1",
+      "urn:amp:reviewer:2"
+    ],
+    "evidence_refs": [
+      "urn:amp:example:claim-check"
+    ]
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvY29tbXVuaXR5IiwidHlwIjoiYW1wK2p3cyJ9.eyJhY3Rpb24iOiJhbm5vdGF0ZSIsImNvbW11bml0eSI6Imh0dHBzOi8vY29tbXVuaXR5LmV4YW1wbGUvaWRlbnRpdHkiLCJldmlkZW5jZV9yZWZzIjpbInVybjphbXA6ZXhhbXBsZTpjbGFpbS1jaGVjayJdLCJpZCI6InVybjphbXA6ZXhhbXBsZTpkZWNpc2lvbiIsImlzc3VlZF9hdCI6IjIwMjYtMTAtMTBUMTM6MDA6MDBaIiwia2luZCI6Ik1vZGVyYXRpb25EZWNpc2lvbiIsInBvbGljeV9pZCI6InVybjphbXA6ZXhhbXBsZTpjb21tdW5pdHktcG9saWN5IiwicmVhc29uIjoiTGltaXRlZCBkb2N1bWVudGFyeSBldmlkZW5jZSIsInJldmlld2VycyI6WyJ1cm46YW1wOnJldmlld2VyOjEiLCJ1cm46YW1wOnJldmlld2VyOjIiXSwicmV2aXNpb24iOjEsInN1YmplY3QiOiJ1cm46YW1wOmV4YW1wbGU6Y29tbXVuaXR5LXJldmlldyIsInZlcnNpb24iOiIwLjEifQ.aYwBcTN63m0F6SIun5mAJ0CxtH67OYUusBk2QhDaDe5PbXMqLSeSF6jUSNPlAePkLciTBwJ3aHhAxaf3TDpFAA"
+}

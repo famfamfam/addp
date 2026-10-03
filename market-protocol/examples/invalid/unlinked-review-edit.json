@@ -1,0 +1,15 @@
+{
+  "version": "0.1",
+  "kind": "BuyerReview",
+  "id": "urn:amp:example:review",
+  "issued_at": "2026-10-07T10:00:00Z",
+  "eligibility_id": "urn:amp:example:eligibility",
+  "seller_id": "https://seller-a.example/identity",
+  "product_id": "urn:amp:example:product",
+  "buyer_subject": "urn:amp:buyer:seller-a:demo",
+  "revision": 2,
+  "rating": 2,
+  "text": "Fictional buyer reports a keyboard defect.",
+  "experience_basis": "buyer_reported",
+  "conflicts": []
+}

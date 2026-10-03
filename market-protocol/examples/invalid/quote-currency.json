@@ -1,0 +1,44 @@
+{
+  "version": "0.1",
+  "kind": "Quote",
+  "id": "urn:amp:example:quote",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "seller_id": "https://seller-a.example/identity",
+  "checkout_operator": "https://seller-a.example/checkout-operator",
+  "offer_id": "https://seller-a.example/offers/demo-14",
+  "offer_revision": 1,
+  "destination_ref": "urn:amp:private-destination:demo",
+  "quantity": 1,
+  "subtotal": {
+    "amount": 89900,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "delivery": {
+    "amount": 1000,
+    "currency": "USD",
+    "exponent": 2
+  },
+  "tax": {
+    "amount": 0,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "discount": {
+    "amount": 0,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "merchant_total": {
+    "amount": 90900,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "delivered_total_known": true,
+  "unknown_costs": [],
+  "delivery_by": "2026-10-06T18:00:00Z",
+  "terms_sha256": "92941ced9312f7574f5a476da81e3e5b7210d4512b6ba2ad15dcd0cc1e08ec64",
+  "expires_at": "2026-10-03T13:00:00Z",
+  "inventory_reserved": false
+}

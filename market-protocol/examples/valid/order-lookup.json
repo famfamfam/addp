@@ -1,0 +1,8 @@
+{
+  "version": "0.1",
+  "kind": "OrderLookup",
+  "id": "urn:amp:example:order-lookup",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "order_id": "urn:amp:example:order"
+}

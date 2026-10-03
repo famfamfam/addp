@@ -1,0 +1,10 @@
+{
+  "version": "0.1",
+  "kind": "Product",
+  "id": "urn:amp:example:product",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "name": "Demonstration laptop",
+  "manufacturer": "Example Hardware",
+  "model": "Demo 14",
+  "category_profile": "laptops/0.1"
+}

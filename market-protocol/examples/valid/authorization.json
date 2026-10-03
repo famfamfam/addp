@@ -1,0 +1,25 @@
+{
+  "version": "0.1",
+  "kind": "Authorization",
+  "id": "urn:amp:example:authorization",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "buyer_subject": "urn:amp:buyer:seller-a:demo",
+  "seller_id": "https://seller-a.example/identity",
+  "checkout_operator": "https://seller-a.example/checkout-operator",
+  "actions": [
+    "order_create"
+  ],
+  "offer_id": "https://seller-a.example/offers/demo-14",
+  "max_quantity": 1,
+  "destination_ref": "urn:amp:private-destination:demo",
+  "delivery_deadline": "2026-10-07T18:00:00Z",
+  "limit": {
+    "amount": 100000,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "terms_sha256": "92941ced9312f7574f5a476da81e3e5b7210d4512b6ba2ad15dcd0cc1e08ec64",
+  "expires_at": "2026-10-03T13:00:00Z",
+  "credential_ref": "urn:amp:credential:NON-OPERATIONAL-DEMO"
+}

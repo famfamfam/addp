@@ -1,0 +1,26 @@
+{
+  "version": "0.1",
+  "kind": "IndexDescriptor",
+  "id": "urn:amp:example:index-a",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "operator": "https://index-a.example/identity",
+  "endpoint": "https://index-a.example/search",
+  "category_profiles": [
+    "laptops/0.1"
+  ],
+  "regions": [
+    "DE-BE"
+  ],
+  "filter_fields": [
+    "price.amount",
+    "attributes.ram_gb",
+    "attributes.mass_g",
+    "delivery_regions"
+  ],
+  "ranking_policy": "id/0.1",
+  "coverage_description": "Three documentary seller catalogs",
+  "max_limit": 100,
+  "freshness_seconds": 300,
+  "service_terms_url": "https://index-a.example/terms"
+}

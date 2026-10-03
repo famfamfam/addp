@@ -1,0 +1,22 @@
+{
+  "version": "0.1",
+  "kind": "RegistryOperation",
+  "id": "urn:amp:example:registry-operation",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "registry_id": "urn:amp:registry:documentary:1",
+  "operation_id": "urn:amp:operation:register-a",
+  "catalog_id": "https://seller-a.example/catalog",
+  "action": "register",
+  "expected_revision": 0,
+  "payer": "https://seller-a.example/identity",
+  "max_fee": {
+    "asset": "urn:amp:asset:documentary:1:test-token",
+    "units": "100"
+  },
+  "fee_schedule_id": "urn:amp:example:fee",
+  "revision": 1,
+  "manifest_url": "https://seller-a.example/manifest",
+  "commitment": "6b7657ac49b1d3f63b19799a14fe685a39b448ad2ac68d014a3510e9f54fe70d",
+  "lease_expires_at": "2026-11-02T10:00:00Z"
+}

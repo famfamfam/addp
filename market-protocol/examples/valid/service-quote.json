@@ -1,0 +1,21 @@
+{
+  "version": "0.1",
+  "kind": "ServiceQuote",
+  "id": "urn:amp:example:service-quote",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "provider": "https://index-a.example/identity",
+  "client": "https://seller-a.example/identity",
+  "service": "search",
+  "unit": "query",
+  "quantity": 100,
+  "charge": {
+    "asset": "urn:amp:asset:documentary:1:test-token",
+    "units": "10"
+  },
+  "max_charge": {
+    "asset": "urn:amp:asset:documentary:1:test-token",
+    "units": "10"
+  },
+  "terms_url": "https://index-a.example/terms",
+  "expires_at": "2026-10-04T10:00:00Z"
+}

@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "OrderRequest",
+  "id": "urn:amp:example:order-request",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "operation_id": "urn:amp:operation:purchase-1",
+  "seller_id": "https://seller-a.example/identity",
+  "quote_id": "urn:amp:example:quote",
+  "quote_sha256": "3b283715bf77a1b7259309ef39b28f2594c1ab870293ff69b48366221d4d8c53",
+  "authorization_id": "urn:amp:example:authorization",
+  "quantity": 1,
+  "expected_total": {
+    "amount": 90900,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "attribution_id": "urn:amp:example:attribution"
+}

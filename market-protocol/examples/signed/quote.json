@@ -1,0 +1,47 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "Quote",
+    "id": "urn:amp:example:quote",
+    "issued_at": "2026-10-03T10:00:00Z",
+    "network_id": "urn:amp:network:documentary:1",
+    "seller_id": "https://seller-a.example/identity",
+    "checkout_operator": "https://seller-a.example/checkout-operator",
+    "offer_id": "https://seller-a.example/offers/demo-14",
+    "offer_revision": 1,
+    "destination_ref": "urn:amp:private-destination:demo",
+    "quantity": 1,
+    "subtotal": {
+      "amount": 89900,
+      "currency": "EUR",
+      "exponent": 2
+    },
+    "delivery": {
+      "amount": 1000,
+      "currency": "EUR",
+      "exponent": 2
+    },
+    "tax": {
+      "amount": 0,
+      "currency": "EUR",
+      "exponent": 2
+    },
+    "discount": {
+      "amount": 0,
+      "currency": "EUR",
+      "exponent": 2
+    },
+    "merchant_total": {
+      "amount": 90900,
+      "currency": "EUR",
+      "exponent": 2
+    },
+    "delivered_total_known": true,
+    "unknown_costs": [],
+    "delivery_by": "2026-10-06T18:00:00Z",
+    "terms_sha256": "92941ced9312f7574f5a476da81e3e5b7210d4512b6ba2ad15dcd0cc1e08ec64",
+    "expires_at": "2026-10-03T13:00:00Z",
+    "inventory_reserved": false
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvc2VsbGVyLWEiLCJ0eXAiOiJhbXArandzIn0.eyJjaGVja291dF9vcGVyYXRvciI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9jaGVja291dC1vcGVyYXRvciIsImRlbGl2ZXJlZF90b3RhbF9rbm93biI6dHJ1ZSwiZGVsaXZlcnkiOnsiYW1vdW50IjoxMDAwLCJjdXJyZW5jeSI6IkVVUiIsImV4cG9uZW50IjoyfSwiZGVsaXZlcnlfYnkiOiIyMDI2LTEwLTA2VDE4OjAwOjAwWiIsImRlc3RpbmF0aW9uX3JlZiI6InVybjphbXA6cHJpdmF0ZS1kZXN0aW5hdGlvbjpkZW1vIiwiZGlzY291bnQiOnsiYW1vdW50IjowLCJjdXJyZW5jeSI6IkVVUiIsImV4cG9uZW50IjoyfSwiZXhwaXJlc19hdCI6IjIwMjYtMTAtMDNUMTM6MDA6MDBaIiwiaWQiOiJ1cm46YW1wOmV4YW1wbGU6cXVvdGUiLCJpbnZlbnRvcnlfcmVzZXJ2ZWQiOmZhbHNlLCJpc3N1ZWRfYXQiOiIyMDI2LTEwLTAzVDEwOjAwOjAwWiIsImtpbmQiOiJRdW90ZSIsIm1lcmNoYW50X3RvdGFsIjp7ImFtb3VudCI6OTA5MDAsImN1cnJlbmN5IjoiRVVSIiwiZXhwb25lbnQiOjJ9LCJuZXR3b3JrX2lkIjoidXJuOmFtcDpuZXR3b3JrOmRvY3VtZW50YXJ5OjEiLCJvZmZlcl9pZCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9vZmZlcnMvZGVtby0xNCIsIm9mZmVyX3JldmlzaW9uIjoxLCJxdWFudGl0eSI6MSwic2VsbGVyX2lkIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL2lkZW50aXR5Iiwic3VidG90YWwiOnsiYW1vdW50Ijo4OTkwMCwiY3VycmVuY3kiOiJFVVIiLCJleHBvbmVudCI6Mn0sInRheCI6eyJhbW91bnQiOjAsImN1cnJlbmN5IjoiRVVSIiwiZXhwb25lbnQiOjJ9LCJ0ZXJtc19zaGEyNTYiOiI5Mjk0MWNlZDkzMTJmNzU3NGY1YTQ3NmRhODFlM2U1YjcyMTBkNDUxMmI2YmEyYWQxNWRjZDBjYzFlMDhlYzY0IiwidW5rbm93bl9jb3N0cyI6W10sInZlcnNpb24iOiIwLjEifQ.H9EI0mZjy2YxNLH1pZeEk-apEwuCqp22BBhQsFOdq_VJeeSuUwtDEycQXMJ3qhWfnRJT-2LFcHte-Ug0Ujd0Ag"
+}

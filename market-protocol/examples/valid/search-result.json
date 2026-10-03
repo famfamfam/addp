@@ -1,0 +1,195 @@
+{
+  "version": "0.1",
+  "kind": "SearchResult",
+  "id": "urn:amp:example:search-result",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "query_id": "urn:amp:example:query",
+  "snapshot_id": "urn:amp:index-view:demo-1",
+  "checkpoint_id": "urn:amp:example:checkpoint",
+  "coverage": {
+    "catalogs": [
+      "https://seller-a.example/catalog",
+      "https://seller-b.example/catalog",
+      "https://seller-c.example/catalog"
+    ],
+    "description": "Documentary data, not live registered offers",
+    "complete_for_declared_sources": true
+  },
+  "candidates": [
+    {
+      "offer": {
+        "version": "0.1",
+        "kind": "Offer",
+        "id": "https://seller-a.example/offers/demo-14",
+        "issued_at": "2026-10-03T10:00:00Z",
+        "catalog_id": "https://seller-a.example/catalog",
+        "seller_id": "https://seller-a.example/identity",
+        "product_id": "urn:amp:example:product",
+        "variant_id": "urn:amp:example:variant",
+        "revision": 1,
+        "title": "Demo 14, 16 GB",
+        "category_profile": "laptops/0.1",
+        "price": {
+          "amount": 89900,
+          "currency": "EUR",
+          "exponent": 2
+        },
+        "condition": "new",
+        "attributes": {
+          "ram_gb": 16,
+          "mass_g": 1350,
+          "storage_gb": 512,
+          "screen_mm": 356
+        },
+        "delivery_regions": [
+          "DE-BE"
+        ],
+        "observed_at": "2026-10-03T10:00:00Z",
+        "valid_until": "2026-10-04T10:00:00Z",
+        "checkout_operator": "https://seller-a.example/checkout-operator",
+        "lookup_url": "https://seller-a.example/offers/demo-14"
+      },
+      "indexed_at": "2026-10-03T10:01:00Z",
+      "checks": [
+        {
+          "field": "price.amount",
+          "result": "match",
+          "source": "https://seller-a.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        },
+        {
+          "field": "attributes.ram_gb",
+          "result": "match",
+          "source": "https://seller-a.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        },
+        {
+          "field": "delivery_regions",
+          "result": "match",
+          "source": "https://seller-a.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "sponsored": false,
+      "lookup_url": "https://seller-a.example/offers/demo-14"
+    },
+    {
+      "offer": {
+        "version": "0.1",
+        "kind": "Offer",
+        "id": "https://seller-b.example/offers/demo-14",
+        "issued_at": "2026-10-03T10:00:00Z",
+        "catalog_id": "https://seller-b.example/catalog",
+        "seller_id": "https://seller-b.example/identity",
+        "product_id": "urn:amp:example:product",
+        "variant_id": "urn:amp:example:variant",
+        "revision": 1,
+        "title": "Demo 14, 16 GB",
+        "category_profile": "laptops/0.1",
+        "price": {
+          "amount": 94900,
+          "currency": "EUR",
+          "exponent": 2
+        },
+        "condition": "new",
+        "attributes": {
+          "ram_gb": 16,
+          "mass_g": 1350,
+          "storage_gb": 512,
+          "screen_mm": 356
+        },
+        "delivery_regions": [
+          "DE-BE"
+        ],
+        "observed_at": "2026-10-03T10:00:00Z",
+        "valid_until": "2026-10-04T10:00:00Z",
+        "checkout_operator": "https://seller-b.example/checkout-operator",
+        "lookup_url": "https://seller-b.example/offers/demo-14"
+      },
+      "indexed_at": "2026-10-03T10:01:00Z",
+      "checks": [
+        {
+          "field": "price.amount",
+          "result": "match",
+          "source": "https://seller-b.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        },
+        {
+          "field": "attributes.ram_gb",
+          "result": "match",
+          "source": "https://seller-b.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        },
+        {
+          "field": "delivery_regions",
+          "result": "match",
+          "source": "https://seller-b.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "sponsored": false,
+      "lookup_url": "https://seller-b.example/offers/demo-14"
+    },
+    {
+      "offer": {
+        "version": "0.1",
+        "kind": "Offer",
+        "id": "https://seller-c.example/offers/demo-14",
+        "issued_at": "2026-10-03T10:00:00Z",
+        "catalog_id": "https://seller-c.example/catalog",
+        "seller_id": "https://seller-c.example/identity",
+        "product_id": "urn:amp:example:product",
+        "variant_id": "urn:amp:example:variant",
+        "revision": 1,
+        "title": "Demo 14, 16 GB",
+        "category_profile": "laptops/0.1",
+        "price": {
+          "amount": 92900,
+          "currency": "EUR",
+          "exponent": 2
+        },
+        "condition": "new",
+        "attributes": {
+          "ram_gb": 16,
+          "mass_g": 1350,
+          "storage_gb": 512,
+          "screen_mm": 356
+        },
+        "delivery_regions": [
+          "DE-BE"
+        ],
+        "observed_at": "2026-10-03T10:00:00Z",
+        "valid_until": "2026-10-04T10:00:00Z",
+        "checkout_operator": "https://marketplace.example/checkout-operator",
+        "lookup_url": "https://seller-c.example/offers/demo-14",
+        "platform_id": "https://marketplace.example/identity",
+        "fulfillment_provider": "https://marketplace.example/fulfillment"
+      },
+      "indexed_at": "2026-10-03T10:01:00Z",
+      "checks": [
+        {
+          "field": "price.amount",
+          "result": "match",
+          "source": "https://seller-c.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        },
+        {
+          "field": "attributes.ram_gb",
+          "result": "match",
+          "source": "https://seller-c.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        },
+        {
+          "field": "delivery_regions",
+          "result": "match",
+          "source": "https://seller-c.example/offers/demo-14",
+          "observed_at": "2026-10-03T10:00:00Z"
+        }
+      ],
+      "sponsored": false,
+      "lookup_url": "https://seller-c.example/offers/demo-14"
+    }
+  ],
+  "partial": false,
+  "failures": []
+}

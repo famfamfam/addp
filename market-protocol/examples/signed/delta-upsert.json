@@ -1,0 +1,54 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "Delta",
+    "id": "urn:amp:example:delta-upsert",
+    "issued_at": "2026-10-03T10:00:00Z",
+    "catalog_id": "https://seller-a.example/catalog",
+    "publisher": "https://seller-a.example/identity",
+    "epoch": "epoch-1",
+    "from_sequence": 2,
+    "through": 2,
+    "changes": [
+      {
+        "seq": 2,
+        "action": "upsert",
+        "offer_id": "https://seller-a.example/offers/demo-14",
+        "revision": 2,
+        "offer": {
+          "version": "0.1",
+          "kind": "Offer",
+          "id": "https://seller-a.example/offers/demo-14",
+          "issued_at": "2026-10-03T10:00:00Z",
+          "catalog_id": "https://seller-a.example/catalog",
+          "seller_id": "https://seller-a.example/identity",
+          "product_id": "urn:amp:example:product",
+          "variant_id": "urn:amp:example:variant",
+          "revision": 2,
+          "title": "Demo 14, 16 GB",
+          "category_profile": "laptops/0.1",
+          "price": {
+            "amount": 90900,
+            "currency": "EUR",
+            "exponent": 2
+          },
+          "condition": "new",
+          "attributes": {
+            "ram_gb": 16,
+            "mass_g": 1350,
+            "storage_gb": 512,
+            "screen_mm": 356
+          },
+          "delivery_regions": [
+            "DE-BE"
+          ],
+          "observed_at": "2026-10-03T10:00:00Z",
+          "valid_until": "2026-10-04T10:00:00Z",
+          "checkout_operator": "https://seller-a.example/checkout-operator",
+          "lookup_url": "https://seller-a.example/offers/demo-14"
+        }
+      }
+    ]
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvc2VsbGVyLWEiLCJ0eXAiOiJhbXArandzIn0.eyJjYXRhbG9nX2lkIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL2NhdGFsb2ciLCJjaGFuZ2VzIjpbeyJhY3Rpb24iOiJ1cHNlcnQiLCJvZmZlciI6eyJhdHRyaWJ1dGVzIjp7Im1hc3NfZyI6MTM1MCwicmFtX2diIjoxNiwic2NyZWVuX21tIjozNTYsInN0b3JhZ2VfZ2IiOjUxMn0sImNhdGFsb2dfaWQiOiJodHRwczovL3NlbGxlci1hLmV4YW1wbGUvY2F0YWxvZyIsImNhdGVnb3J5X3Byb2ZpbGUiOiJsYXB0b3BzLzAuMSIsImNoZWNrb3V0X29wZXJhdG9yIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL2NoZWNrb3V0LW9wZXJhdG9yIiwiY29uZGl0aW9uIjoibmV3IiwiZGVsaXZlcnlfcmVnaW9ucyI6WyJERS1CRSJdLCJpZCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9vZmZlcnMvZGVtby0xNCIsImlzc3VlZF9hdCI6IjIwMjYtMTAtMDNUMTA6MDA6MDBaIiwia2luZCI6Ik9mZmVyIiwibG9va3VwX3VybCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9vZmZlcnMvZGVtby0xNCIsIm9ic2VydmVkX2F0IjoiMjAyNi0xMC0wM1QxMDowMDowMFoiLCJwcmljZSI6eyJhbW91bnQiOjkwOTAwLCJjdXJyZW5jeSI6IkVVUiIsImV4cG9uZW50IjoyfSwicHJvZHVjdF9pZCI6InVybjphbXA6ZXhhbXBsZTpwcm9kdWN0IiwicmV2aXNpb24iOjIsInNlbGxlcl9pZCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9pZGVudGl0eSIsInRpdGxlIjoiRGVtbyAxNCwgMTYgR0IiLCJ2YWxpZF91bnRpbCI6IjIwMjYtMTAtMDRUMTA6MDA6MDBaIiwidmFyaWFudF9pZCI6InVybjphbXA6ZXhhbXBsZTp2YXJpYW50IiwidmVyc2lvbiI6IjAuMSJ9LCJvZmZlcl9pZCI6Imh0dHBzOi8vc2VsbGVyLWEuZXhhbXBsZS9vZmZlcnMvZGVtby0xNCIsInJldmlzaW9uIjoyLCJzZXEiOjJ9XSwiZXBvY2giOiJlcG9jaC0xIiwiZnJvbV9zZXF1ZW5jZSI6MiwiaWQiOiJ1cm46YW1wOmV4YW1wbGU6ZGVsdGEtdXBzZXJ0IiwiaXNzdWVkX2F0IjoiMjAyNi0xMC0wM1QxMDowMDowMFoiLCJraW5kIjoiRGVsdGEiLCJwdWJsaXNoZXIiOiJodHRwczovL3NlbGxlci1hLmV4YW1wbGUvaWRlbnRpdHkiLCJ0aHJvdWdoIjoyLCJ2ZXJzaW9uIjoiMC4xIn0.1ZJfUoYJLn4ECLuGFENFdI8kpIkCVcq0daOluxG5derRoJ5j8Sw2E-Drk8SdoHFvALF3BQh8Tky0Qhbe8DZ_BA"
+}

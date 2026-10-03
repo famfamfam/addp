@@ -1,0 +1,18 @@
+{
+  "version": "0.1",
+  "kind": "KeyDescriptor",
+  "id": "https://keys.example/buyer",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "owner": "urn:amp:buyer:seller-a:demo",
+  "jwk": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "MfMcmyXSlbiKYw2W3SI-zz41S22VeROiCZS44Dc8q6E"
+  },
+  "valid_from": "2026-10-01T00:00:00Z",
+  "valid_until": "2027-10-01T00:00:00Z",
+  "status": "active",
+  "roles": [
+    "review"
+  ]
+}

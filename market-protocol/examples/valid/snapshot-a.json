@@ -1,0 +1,16 @@
+{
+  "version": "0.1",
+  "kind": "Snapshot",
+  "id": "https://seller-a.example/snapshot/1",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "catalog_id": "https://seller-a.example/catalog",
+  "epoch": "epoch-1",
+  "through": 1,
+  "parts": [
+    {
+      "url": "https://seller-a.example/snapshot/1/part-1",
+      "sha256": "b66f64f0d14cc07d1aec2fec641e23ff0fc5e3b6f20e2f73d425e438f44cf11b"
+    }
+  ],
+  "expires_at": "2026-10-04T10:00:00Z"
+}

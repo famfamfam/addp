@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "Delta",
+  "id": "urn:amp:example:delta-delete",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "catalog_id": "https://seller-a.example/catalog",
+  "publisher": "https://seller-a.example/identity",
+  "epoch": "epoch-1",
+  "from_sequence": 3,
+  "through": 3,
+  "changes": [
+    {
+      "seq": 3,
+      "action": "delete",
+      "offer_id": "https://seller-a.example/offers/demo-14",
+      "revision": 3
+    }
+  ]
+}

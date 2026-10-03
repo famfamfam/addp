@@ -1,0 +1,12 @@
+{
+  "version": "0.1",
+  "kind": "RegistryCheckpoint",
+  "id": "urn:amp:example:checkpoint",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "registry_id": "urn:amp:registry:documentary:1",
+  "chain_profile": "urn:amp:chain:documentary:1",
+  "height": 42,
+  "block_hash": "3fbc995ed2dde3ec1ba80b40c9ae4b4c7f32991b58b65bd2da5e90ee1e8e8150",
+  "finality": "simulated"
+}

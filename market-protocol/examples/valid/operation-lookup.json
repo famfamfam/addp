@@ -1,0 +1,8 @@
+{
+  "version": "0.1",
+  "kind": "OperationLookup",
+  "id": "urn:amp:example:operation-lookup",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "operation_id": "urn:amp:operation:purchase-1"
+}

@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "CatalogManifest",
+  "id": "https://seller-b.example/manifest",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "catalog_id": "https://seller-b.example/catalog",
+  "seller_id": "https://seller-b.example/identity",
+  "publisher": "https://seller-b.example/identity",
+  "revision": 1,
+  "epoch": "epoch-1",
+  "head": 1,
+  "oldest_sequence": 2,
+  "category_profile": "laptops/0.1",
+  "snapshot_url": "https://seller-b.example/snapshot/1",
+  "snapshot_sha256": "7c16a592527fce2e6ceb0af87d3e340751a64929d612639b17048c4c02f4cb63",
+  "changes_url": "https://seller-b.example/changes",
+  "mirror_urls": [],
+  "rights_url": "https://seller-b.example/reuse-terms"
+}

@@ -1,0 +1,19 @@
+{
+  "payload": {
+    "version": "0.1",
+    "kind": "ReviewEligibility",
+    "id": "urn:amp:example:eligibility",
+    "issued_at": "2026-10-03T10:00:00Z",
+    "issuer": "https://issuer.example/identity",
+    "order_id": "urn:amp:example:order",
+    "line_id": "urn:amp:line:1",
+    "seller_id": "https://seller-a.example/identity",
+    "buyer_subject": "urn:amp:buyer:seller-a:demo",
+    "policy_id": "urn:amp:example:issuer-policy",
+    "evidence_refs": [
+      "urn:amp:example:evidence"
+    ],
+    "expires_at": "2026-12-01T00:00:00Z"
+  },
+  "jws": "eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaHR0cHM6Ly9rZXlzLmV4YW1wbGUvaXNzdWVyIiwidHlwIjoiYW1wK2p3cyJ9.eyJidXllcl9zdWJqZWN0IjoidXJuOmFtcDpidXllcjpzZWxsZXItYTpkZW1vIiwiZXZpZGVuY2VfcmVmcyI6WyJ1cm46YW1wOmV4YW1wbGU6ZXZpZGVuY2UiXSwiZXhwaXJlc19hdCI6IjIwMjYtMTItMDFUMDA6MDA6MDBaIiwiaWQiOiJ1cm46YW1wOmV4YW1wbGU6ZWxpZ2liaWxpdHkiLCJpc3N1ZWRfYXQiOiIyMDI2LTEwLTAzVDEwOjAwOjAwWiIsImlzc3VlciI6Imh0dHBzOi8vaXNzdWVyLmV4YW1wbGUvaWRlbnRpdHkiLCJraW5kIjoiUmV2aWV3RWxpZ2liaWxpdHkiLCJsaW5lX2lkIjoidXJuOmFtcDpsaW5lOjEiLCJvcmRlcl9pZCI6InVybjphbXA6ZXhhbXBsZTpvcmRlciIsInBvbGljeV9pZCI6InVybjphbXA6ZXhhbXBsZTppc3N1ZXItcG9saWN5Iiwic2VsbGVyX2lkIjoiaHR0cHM6Ly9zZWxsZXItYS5leGFtcGxlL2lkZW50aXR5IiwidmVyc2lvbiI6IjAuMSJ9.dFWj54De4siJRHqYBN9N8Puf14CbCWMmhSVyvO4P8mgh22bXDRUuiDVdUlanFEtBHY8UIYRVFSuzb2W-lu1kBw"
+}

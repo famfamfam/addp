@@ -1,0 +1,13 @@
+{
+  "version": "0.1",
+  "kind": "OrderAction",
+  "id": "urn:amp:example:refund-request",
+  "issued_at": "2026-10-08T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "operation_id": "urn:amp:operation:refund-1",
+  "order_id": "urn:amp:example:order",
+  "expected_revision": 1,
+  "action": "refund_request",
+  "reason": "Buyer reports a defect",
+  "authorization_id": "urn:amp:example:after-sales-authorization"
+}

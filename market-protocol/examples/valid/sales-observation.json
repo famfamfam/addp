@@ -1,0 +1,17 @@
+{
+  "version": "0.1",
+  "kind": "SalesObservation",
+  "id": "urn:amp:example:sales-observation",
+  "issued_at": "2026-11-01T00:00:00Z",
+  "source": "https://issuer.example/identity",
+  "subject": "https://seller-a.example/identity",
+  "period_start": "2026-10-01T00:00:00Z",
+  "period_end": "2026-11-01T00:00:00Z",
+  "unit": "orders",
+  "count": 1,
+  "returns": 1,
+  "overlap": "unknown",
+  "evidence_refs": [
+    "urn:amp:example:payment"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "version": "0.1",
+  "kind": "Order",
+  "id": "urn:amp:example:order",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "seller_id": "https://seller-a.example/identity",
+  "checkout_operator": "https://seller-a.example/checkout-operator",
+  "buyer_subject": "urn:amp:buyer:seller-a:demo",
+  "revision": 1,
+  "quote_id": "urn:amp:example:quote",
+  "operation_id": "urn:amp:operation:purchase-1",
+  "lines": [
+    {
+      "id": "urn:amp:line:1",
+      "offer_id": "https://seller-a.example/offers/demo-14",
+      "variant_id": "urn:amp:example:variant",
+      "quantity": 1
+    }
+  ],
+  "total": {
+    "amount": 90900,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "order_state": "confirmed",
+  "payment_state": "captured",
+  "fulfillment_state": "pending",
+  "refund_state": "none",
+  "allowed_actions": [
+    "cancel",
+    "refund_request",
+    "status"
+  ],
+  "handoff_url": "https://seller-a.example/orders/demo",
+  "attribution_id": "urn:amp:example:attribution"
+}

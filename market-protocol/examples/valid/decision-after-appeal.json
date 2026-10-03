@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "kind": "ModerationDecision",
+  "id": "urn:amp:example:decision-after-appeal",
+  "issued_at": "2026-10-11T10:00:00Z",
+  "community": "https://community.example/identity",
+  "subject": "urn:amp:example:community-review",
+  "policy_id": "urn:amp:example:community-policy",
+  "revision": 2,
+  "action": "restore",
+  "reason": "Annotation incorrectly implied a completed test",
+  "reviewers": [
+    "urn:amp:reviewer:3",
+    "urn:amp:reviewer:4"
+  ],
+  "evidence_refs": [
+    "urn:amp:example:claim-check"
+  ],
+  "previous_decision": "urn:amp:example:decision"
+}

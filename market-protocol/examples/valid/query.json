@@ -1,0 +1,40 @@
+{
+  "version": "0.1",
+  "kind": "SearchQuery",
+  "id": "urn:amp:example:query",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "category_profile": "laptops/0.1",
+  "currency": "EUR",
+  "currency_exponent": 2,
+  "destination_region": "DE-BE",
+  "hard_filters": [
+    {
+      "field": "price.amount",
+      "op": "lte",
+      "value": 100000
+    },
+    {
+      "field": "attributes.ram_gb",
+      "op": "gte",
+      "value": 16
+    },
+    {
+      "field": "delivery_regions",
+      "op": "in",
+      "value": [
+        "DE-BE"
+      ]
+    }
+  ],
+  "preferences": [
+    "lower mass"
+  ],
+  "text": "laptop for travel",
+  "select": [
+    "id",
+    "price",
+    "attributes"
+  ],
+  "limit": 10
+}

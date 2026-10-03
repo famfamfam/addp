@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "ModerationDecision",
+  "id": "urn:amp:example:decision",
+  "issued_at": "2026-10-10T13:00:00Z",
+  "community": "https://community.example/identity",
+  "subject": "urn:amp:example:community-review",
+  "policy_id": "urn:amp:example:community-policy",
+  "revision": 1,
+  "action": "annotate",
+  "reason": "Limited documentary evidence",
+  "reviewers": [
+    "urn:amp:reviewer:1",
+    "urn:amp:reviewer:2"
+  ],
+  "evidence_refs": [
+    "urn:amp:example:claim-check"
+  ]
+}

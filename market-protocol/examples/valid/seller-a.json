@@ -1,0 +1,12 @@
+{
+  "version": "0.1",
+  "kind": "Seller",
+  "id": "https://seller-a.example/identity",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "name": "Demonstration seller A",
+  "origin": "https://seller-a.example",
+  "publishing_keys": [
+    "https://keys.example/seller-a"
+  ],
+  "policy_url": "https://seller-a.example/terms"
+}

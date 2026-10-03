@@ -1,0 +1,18 @@
+{
+  "version": "0.1",
+  "kind": "KeyDescriptor",
+  "id": "https://keys.example/community",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "owner": "https://community.example/identity",
+  "jwk": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "Y16PXnsyZz0N3gmAZHYbOT8hSvsVi6GYr2n5JR_K0Hg"
+  },
+  "valid_from": "2026-10-01T00:00:00Z",
+  "valid_until": "2027-10-01T00:00:00Z",
+  "status": "active",
+  "roles": [
+    "community"
+  ]
+}

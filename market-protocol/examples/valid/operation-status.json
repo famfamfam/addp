@@ -1,0 +1,12 @@
+{
+  "version": "0.1",
+  "kind": "OperationStatus",
+  "id": "urn:amp:example:operation-status",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "network_id": "urn:amp:network:documentary:1",
+  "operation_id": "urn:amp:operation:purchase-1",
+  "state": "succeeded",
+  "request_sha256": "28b2c010e2d5fe20a51b23e350bc05ab1db2b1b686a952fb8ec28a31914c7802",
+  "lookup_url": "https://seller-a.example/operations/demo",
+  "result_ref": "urn:amp:example:order"
+}

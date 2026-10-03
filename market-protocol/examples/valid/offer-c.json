@@ -1,0 +1,34 @@
+{
+  "version": "0.1",
+  "kind": "Offer",
+  "id": "https://seller-c.example/offers/demo-14",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "catalog_id": "https://seller-c.example/catalog",
+  "seller_id": "https://seller-c.example/identity",
+  "product_id": "urn:amp:example:product",
+  "variant_id": "urn:amp:example:variant",
+  "revision": 1,
+  "title": "Demo 14, 16 GB",
+  "category_profile": "laptops/0.1",
+  "price": {
+    "amount": 92900,
+    "currency": "EUR",
+    "exponent": 2
+  },
+  "condition": "new",
+  "attributes": {
+    "ram_gb": 16,
+    "mass_g": 1350,
+    "storage_gb": 512,
+    "screen_mm": 356
+  },
+  "delivery_regions": [
+    "DE-BE"
+  ],
+  "observed_at": "2026-10-03T10:00:00Z",
+  "valid_until": "2026-10-04T10:00:00Z",
+  "checkout_operator": "https://marketplace.example/checkout-operator",
+  "lookup_url": "https://seller-c.example/offers/demo-14",
+  "platform_id": "https://marketplace.example/identity",
+  "fulfillment_provider": "https://marketplace.example/fulfillment"
+}

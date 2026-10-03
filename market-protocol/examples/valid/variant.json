@@ -1,0 +1,14 @@
+{
+  "version": "0.1",
+  "kind": "Variant",
+  "id": "urn:amp:example:variant",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "product_id": "urn:amp:example:product",
+  "name": "16 GB / 512 GB",
+  "attributes": {
+    "ram_gb": 16,
+    "mass_g": 1350,
+    "storage_gb": 512,
+    "screen_mm": 356
+  }
+}

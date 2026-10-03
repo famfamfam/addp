@@ -1,0 +1,10 @@
+{
+  "version": "0.1",
+  "kind": "Error",
+  "id": "urn:amp:example:error",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "code": "unsupported_requirement",
+  "message": "The requested field is not supported",
+  "retryable": false,
+  "field": "attributes.unrecognized"
+}

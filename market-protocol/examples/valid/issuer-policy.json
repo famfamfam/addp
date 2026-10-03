@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "IssuerPolicy",
+  "id": "urn:amp:example:issuer-policy",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "owner": "https://community.example/identity",
+  "revision": 1,
+  "accepted_issuers": [
+    "https://issuer.example/identity"
+  ],
+  "claim_types": [
+    "payment_captured",
+    "delivery",
+    "refund"
+  ],
+  "key_status_policy": "Current trusted descriptor; historical claims require policy review",
+  "retention_days": 90,
+  "appeal_url": "https://community.example/appeals"
+}

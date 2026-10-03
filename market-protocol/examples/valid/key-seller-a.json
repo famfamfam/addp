@@ -1,0 +1,19 @@
+{
+  "version": "0.1",
+  "kind": "KeyDescriptor",
+  "id": "https://keys.example/seller-a",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "owner": "https://seller-a.example/identity",
+  "jwk": {
+    "kty": "OKP",
+    "crv": "Ed25519",
+    "x": "2XCGhRbYy8s-UhsDRZzv9TrRbvSS2Ls-Y3M5lQU4Pwg"
+  },
+  "valid_from": "2026-10-01T00:00:00Z",
+  "valid_until": "2027-10-01T00:00:00Z",
+  "status": "active",
+  "roles": [
+    "publisher",
+    "checkout"
+  ]
+}

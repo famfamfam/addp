@@ -1,0 +1,20 @@
+{
+  "version": "0.1",
+  "kind": "CommunityPolicy",
+  "id": "urn:amp:example:community-policy",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "community": "https://community.example/identity",
+  "revision": 1,
+  "reviewer_selection": "Two disclosed reviewers with relevant subject experience",
+  "conflict_policy": "Disclose relationships; recuse from own commercial disputes",
+  "evidence_requirements": "Specific assertion, source documents and response opportunity",
+  "response_days": 7,
+  "appeal_days": 30,
+  "insufficient_reviewers": "Publish inconclusive and the limitation",
+  "moderator_powers": [
+    "annotate",
+    "limit_display",
+    "remove",
+    "restore"
+  ]
+}

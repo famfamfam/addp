@@ -1,0 +1,10 @@
+{
+  "version": "0.1",
+  "kind": "Attribution",
+  "id": "urn:amp:example:attribution",
+  "issued_at": "2026-10-03T10:00:00Z",
+  "referrer": "https://agent.example/identity",
+  "agreement_id": "urn:amp:agreement:demo",
+  "referral_id": "urn:amp:referral:demo",
+  "disclosed": true
+}
