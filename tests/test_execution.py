@@ -60,6 +60,57 @@ def test_lost_reply_and_restart(setup, validator, clock):
     assert restarted.journal.held("i7") == 33399
 
 
+@pytest.mark.parametrize("error", [TimeoutError, OSError])
+@pytest.mark.parametrize("initial", ["unknown", "pending", "in_progress"])
+def test_status_transport_failure_keeps_reservation(setup, validator, clock, monkeypatch, error, initial):
+    runtime, _, quote = setup
+    service = runtime.bindings[BINDING]
+    if initial == "in_progress":
+        # Crash after dispatch was recorded, before the service saw the request.
+        runtime.journal.reserve("op1", PAYLOAD, "|".join(BINDING))
+        assert runtime.journal.dispatch("op1")
+    elif initial == "pending":
+        assert run(runtime, quote, pending=True) == "pending"
+    else:
+        assert run(runtime, quote, lose_response=True) == "unknown"
+
+    def unavailable(*args):
+        raise error("status response lost")
+
+    def unexpected_send(*args, **kwargs):
+        pytest.fail("a failed status lookup must not resend the purchase")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(service, "status", unavailable)
+        patch.setattr(service, "execute", unexpected_send)
+        assert runtime.recover("op1", grant_id="g1") == "unknown"
+    assert runtime.journal.operation("op1")["status"] == "unknown"
+    assert runtime.journal.held("i7") == 33399
+
+    if initial == "pending":
+        service.finish("op1")
+    restarted = Runtime(Journal(runtime.journal.path, validator, clock),
+                        {BINDING: SandboxService(service.path, validator, clock)})
+    assert restarted.recover("op1", grant_id="g1") == "succeeded"
+    assert restarted.recover("op1", grant_id="g1") == "succeeded"
+    assert restarted.journal.held("i7") == 33399
+    with service.connect() as db:
+        assert db.execute("SELECT count(*) FROM effects").fetchone()[0] == 1
+
+
+def test_status_protocol_error_is_not_hidden(setup, monkeypatch):
+    runtime, _, quote = setup
+    assert run(runtime, quote, lose_response=True) == "unknown"
+
+    def forbidden(*args):
+        raise ProtocolError("forbidden")
+
+    monkeypatch.setattr(runtime.bindings[BINDING], "status", forbidden)
+    with pytest.raises(ProtocolError, match="forbidden"):
+        runtime.recover("op1", grant_id="g1")
+    assert runtime.journal.held("i7") == 33399
+
+
 def test_quote_changed_at_service(setup):
     runtime, _, quote = setup
     updated = deepcopy(quote)

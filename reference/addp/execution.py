@@ -350,7 +350,13 @@ class Runtime:
         if operation["status"] in TERMINAL or operation["status"] == "not_started":
             return operation["status"]
         service = self.bindings[tuple(operation["binding"].split("|"))]
-        state = service.status(operation_id, operation["payload"])
+        try:
+            state = service.status(operation_id, operation["payload"])
+        except (TimeoutError, OSError):
+            # A lost status response says nothing about the operation's outcome.
+            # Keep the reservation and let a later recovery attempt check again.
+            self.journal.observe(operation_id, "unknown")
+            return "unknown"
         if state == "conflict":
             state = "failed"
         elif state == "not_found":

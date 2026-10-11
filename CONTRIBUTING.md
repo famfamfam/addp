@@ -20,6 +20,15 @@ ADDP is an experimental draft. The most useful contributions right now are:
   the ADDP intent as AP2 open mandates, would move the runtime profile out of the
   sandbox.
 
+## Documentation languages
+
+The maintained README languages are English, Russian, Spanish and Simplified
+Chinese. English is the reference text. Keep their descriptions of scope, behavior
+and limitations aligned; the detailed introductory overview is maintained in
+English and Russian and linked from all four READMEs. Keep language navigation
+limited to those four versions. Diagrams use Mermaid and have accompanying text
+so the explanation remains readable without diagram rendering.
+
 ## Changing the specification
 
 The specification is [`rfc/draft-kibin-addp-00.xml`](rfc/draft-kibin-addp-00.xml).

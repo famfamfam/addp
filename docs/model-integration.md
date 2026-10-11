@@ -15,11 +15,17 @@ runtime: Handles.get -> resolve_candidate (re-check at the publisher)
       -> user approval (Journal.approve) -> quote -> Runtime.run
 ```
 
-The runtime does in code everything that has one right answer: currency, price limits,
-required facts, the identity of the resource, the quote, the budget, the capability
-digest and the state of the operation. The model is left with judgement: which of three
-valid offers fits "quiet, for travel" best, or whether a listing really is the model the
-user asked for.
+The first view in this flow contains index claims, including explicit unknowns.
+The model may propose a candidate before the publisher is consulted. The runtime
+must then re-check it before telling the user that it meets the hard constraints
+or acting on it. An application may also re-check candidates before asking the
+model; it must not describe index-only candidates as already verified.
+
+The runtime performs deterministic checks in code: currency, price limits, required
+facts, resource identity, the quote, the budget, the capability digest and the state
+of the operation. These checks happen at the relevant stage, not all before the
+model sees a view. The model is left with judgement: which candidate appears to fit
+"quiet, for travel" best, or whether a listing is the model the user asked for.
 
 If the user's criterion can be written as hard constraints plus a sort key ("the
 cheapest new black one"), the runtime picks without a model.
@@ -86,8 +92,9 @@ same labelled scenarios through several deciders:
 
 Scenarios: a subjective preference among valid offers; near-identical models (XM5 and
 XM6); product names with injected instructions; no suitable offer, where the right
-answer is to ask the user; and stale index data, which the re-check should catch before
-any model sees it.
+answer is to ask the user; and stale index data, which the re-check should catch
+before the application asserts eligibility or executes a purchase, even if the
+model already proposed that candidate.
 
 Metrics:
 

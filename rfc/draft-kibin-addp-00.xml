@@ -694,6 +694,10 @@
     <tt>namespace</tt>, then <tt>id</tt>, each compared as a sequence of
     Unicode code points. Indexes do not rank. A runtime that wants a ranking
     computes it.</t>
+    <t>The first page need not contain the cheapest matching resources.
+    Finding a minimum over a stated query scope requires examining all
+    matching pages. Ranking an incomplete collection describes only the
+    candidates examined, not the unexamined results or the wider market.</t>
     <t>All pages of one query reflect one state of the index, taken when
     the initial query was answered. Pages do not overlap and do not skip
     results. <tt>next_cursor</tt> is an opaque string, or null on the last
@@ -733,8 +737,9 @@
     <xref target="select"/>.</dd>
     <dt><tt>paid_inclusion</tt>:</dt><dd><tt>"yes"</tt>, <tt>"no"</tt> or
     <tt>"unknown"</tt>: whether the publisher paid the index to include this
-    resource. Since results are not ranked, position cannot be bought;
-    inclusion can.</dd>
+    resource. Fixed ordering does not establish neutrality: publishers can
+    choose identifiers that sort early, and indexes can charge for
+    inclusion. This field is a claim by the index.</dd>
   </dl>
   <t>A candidate is a claim by the index about a claim by the publisher. A
   runtime <bcp14>MUST NOT</bcp14> use a candidate as authorization or as
@@ -1140,12 +1145,14 @@
   <section anchor="sec-index">
     <name>Index Manipulation</name>
     <t>An index can omit resources, include resources for payment, or
-    return stale facts. Fixed ordering (<xref target="paging"/>) removes
-    ranking as a lever, and <tt>paid_inclusion</tt> discloses paid inclusion
-    if the index is honest. Resolution (<xref target="reevaluation"/>)
-    catches stale or false facts about resources that are returned. Omission
-    cannot be detected from one index; querying several independent indexes
-    reduces it.</t>
+    return stale facts. Fixed ordering (<xref target="paging"/>) excludes
+    index-defined relevance scores but does not prevent manipulation of
+    identifiers or inclusion. The <tt>paid_inclusion</tt> field discloses
+    paid inclusion if the index is honest. Resolution
+    (<xref target="reevaluation"/>) catches disagreements between returned
+    index facts and the publisher's current claims; it does not establish
+    that the publisher is honest. Omission cannot be detected from one
+    index; querying several independent indexes may reduce it.</t>
   </section>
 
   <section anchor="sec-price">
@@ -1488,10 +1495,11 @@
       <dt>UCP:</dt>
       <dd>UCP covers business discovery, capability negotiation, catalog
       search and checkout for one business <xref target="UCP"/>. The ADDP
-      manifest and query overlap with it. ADDP adds consistency rules for
-      feeds, a query whose semantics hold across indexes, re-evaluation at
-      the origin, and the runtime profile. If the experiment shows that
-      these fit into UCP, they should go there.</dd>
+      manifest and query overlap with it. UCP also treats catalog data as
+      provisional and checkout as authoritative. ADDP explores consistency
+      rules for cross-publisher feeds, a query whose semantics hold across
+      indexes, and the runtime profile. If the experiment shows that these
+      fit into UCP, they should go there.</dd>
       <dt>Agentic Commerce Protocol (ACP):</dt>
       <dd>ACP <xref target="ACP"/> defines a checkout API that an agent calls
       at a merchant, and a payment token that the merchant can use for one
@@ -1642,6 +1650,9 @@
       <li>Bindings for real checkout and payment protocols, and whether any
       of them meets <xref target="binding-reqs"/> today.</li>
       <li>Task-level measurements of the model views on named models.</li>
+      <li>The cost of complete pagination before local ranking on broad
+      queries, including memory use, cursor expiry and how applications
+      describe an incomplete collection.</li>
       <li>Push delivery of feed changes.</li>
       <li>Implementations built on different versions of Unicode can
       disagree on text matching for newly assigned characters.</li>

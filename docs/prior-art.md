@@ -8,7 +8,7 @@ reviewed and may overlap more than this page says.
 
 | Work | Finds | Where | Overlap with ADDP | What ADDP adds |
 |---|---|---|---|---|
-| UCP | Business capabilities; catalog of one business | `/.well-known/ucp` | Manifest; catalog search | Feeds with consistency rules; queries across indexes; re-evaluation at origin; runtime profile |
+| UCP | Business capabilities; catalog of one business | `/.well-known/ucp` | Manifest; catalog search; checkout is authoritative | Cross-publisher feed consistency and index query rules; runtime reservation and recovery profile |
 | ARD | Tools, APIs, agents, skills | `/.well-known/ard.json` | Origin catalogs; registries that search them | Items with typed facts; change feeds; fixed-order typed queries; re-evaluation; runtime profile |
 | agent.json ("Agent Web Protocol") | Actions of one site | `/agent.json` or `/.well-known/agent.json` | Manifest and capability documents | Feeds; index queries; re-evaluation; spending limits |
 | A2A agent cards | Agents | `/.well-known/agent-card.json` | None beyond "a JSON file at a well-known URI" | Everything item-related |
@@ -16,13 +16,15 @@ reviewed and may overlap more than this page says.
 | ACP | Checkout at one merchant; product feeds pushed to an agent | `/.well-known/acp.json` | Idempotent checkout; feeds; "checkout is authoritative" | Queries across indexes; feed deletions and sequence numbers; an expected total at completion (missing in ACP) |
 | AP2 | Nothing; secures purchases inside a commerce protocol | None | User approval with limits (open mandates); exact binding of payment to checkout | Discovery; runtime handling of lost responses and reservations; AP2 could carry the ADDP intent |
 
-The common gap: none of these defines how an index keeps a consistent copy of many
-publishers' items, what a query over them means, or that a client must re-check an
-index's claim at the origin before relying on it. AP2 states what merchants and
-credential providers verify, and ACP how a merchant handles repeated requests, but
-neither says what the agent's own runtime must record and check before it sends a
-payment, or what it does when the response is lost. That is the part ADDP is an
-experiment about.
+In the versions and documents reviewed here, we did not find the same combined
+contract for cross-publisher feed consistency, deterministic index queries and
+runtime reservation and recovery. This is a bounded comparison, not evidence that
+no other standard covers these requirements. Treating checkout terms as authoritative
+is already part of UCP and ACP; re-checking prices alone is not ADDP's contribution.
+
+ADDP experiments with making these requirements testable together. That does not
+yet show they need a separate protocol: a binding or extension of existing work
+may be the better outcome. See [the next experiments](design-rationale.md#what-to-validate-next).
 
 ## Checked
 
@@ -38,6 +40,11 @@ experiment about.
   `title`, `price{amount, currency}`, `availability{available}`.
 - The pages read define no feeds, freshness or consistency guarantees. That is a
   statement about those pages, not proof that UCP has none.
+- Follow-up checked on 2026-10-11: the catalog overview's "Relationship to Checkout"
+  says catalog responses are not transactional commitments, checkout is authoritative,
+  and session-specific responses should not be reused across sessions without
+  re-validation. This overlaps with ADDP's treatment of search results as provisional;
+  it does not establish cross-publisher change-feed or index-query equivalence.
 - ADDP reads UCP catalogs through an adapter (draft appendix "UCP Catalog Adapter")
   instead of asking UCP businesses to publish anything new.
 - Sources: <https://ucp.dev/specification/overview/>,

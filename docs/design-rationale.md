@@ -1,7 +1,8 @@
 # Design rationale
 
 Why ADDP is built the way it is, and what was considered and rejected. The normative
-text is the draft; this page explains it.
+text is the draft; this page explains it. For a first introduction with diagrams,
+read [ADDP in five minutes](how-it-works.md) ([Russian](how-it-works.ru.md)).
 
 ## The problem, in one example
 
@@ -37,8 +38,17 @@ remove them.
 
 Query results come back in a fixed order (by publisher, namespace, id). Two indexes
 holding the same data return the same set in the same order, which makes them testable
-against each other. It also removes ranking as something a publisher can pay for. What
-can still be paid for is inclusion, which the `paid_inclusion` field discloses.
+against each other. There is no index-defined relevance score to buy. This does not
+make the results neutral: publishers can choose identifiers that sort early, and an
+index can charge for inclusion. The `paid_inclusion` field discloses that only if
+the index reports it honestly.
+
+The cost is pagination. The first page need not contain the cheapest offers. To
+find a minimum within a stated search scope, the runtime must examine every matching
+page, then rank locally. If a cursor expires or collection stops early, it cannot
+claim a minimum over the unexamined results. Even a complete scan covers only the
+configured indexes and the publishers they include. The reference index also stores
+query pages in memory and limits live cursors; its tests do not establish scalability.
 
 *Rejected:* relevance scores from indexes. Scores from different indexes are not
 comparable, and a ranking the client cannot check invites paid placement.
@@ -121,6 +131,10 @@ transaction as the limit check, so two concurrent operations cannot both fit und
 limit. After a timeout the outcome is `unknown`: the reservation stays, and the runtime
 asks the service for the status.
 
+A timeout or transport error on that status request also leaves the outcome
+unknown. The reference runtime keeps the reservation and returns `unknown`, without
+resending in that recovery attempt. A later attempt may obtain a recorded outcome.
+
 The service side has to cooperate. The draft requires an execution binding to:
 
 1. reject an operation that does not match the current quote (price, session, item,
@@ -184,3 +198,23 @@ not adopted:
   binding to say which component enforces the match with the quote.
 - **A flag that marks purchases "influenced by untrusted content".** Such influence
   cannot be observed reliably. The draft limits what influenced output can do instead.
+
+## What to validate next
+
+The useful hypothesis is a shared, testable contract across feeds, indexes and
+buyer applications. A separate standard is not yet justified by interoperability
+or deployment evidence. These experiments should inform that decision:
+
+| Question | Experiment | Evidence to report |
+|---|---|---|
+| Can independently written indexes agree? | Have a second implementation consume the same snapshots, changes and query corpus | Result references and ordering, replay and deletion behavior, cursor consistency, and disagreements |
+| Is complete local ranking practical? | Search broad catalogs at increasing sizes, including many-page results, expired cursors and an early stop | Pages fetched, end-to-end latency, peak memory and whether the cheapest result in the declared scope was found |
+| Can a real checkout meet the binding requirements? | Map a versioned checkout protocol to quote matching, authorization, recorded outcomes and status recovery; inject lost replies and retries in its test environment | Which guarantees are enforced by which service, retention limits, unresolved operations and duplicate effects |
+| Does the smaller model view preserve useful decisions? | Run the labelled scenarios in [model-integration.md](model-integration.md) against a rule baseline and named models | Choice quality, abstention, latency and cost per completed task, not token counts alone |
+| Is ADDP best kept separate? | Use the implementation and binding results to map each requirement to existing protocols and their extension mechanisms | Requirements already covered, minimal missing extensions and measured integration work |
+
+Keep the current wire format and fixed-order query semantics while gathering this
+evidence. A ranking extension, real payment integration or restructuring into other
+protocols needs a separate design decision. Re-checking the publisher establishes
+what it currently claims; it cannot prove honesty, availability on delivery, or
+successful fulfillment.

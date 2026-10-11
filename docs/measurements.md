@@ -14,6 +14,10 @@ Task: the three cheapest new black offers, under a EUR 350 limit on the total. T
 index filters on currency and condition and returns 16 of the 20 offers. The runtime
 filters colour, ranks by price and keeps three.
 
+All 16 matches fit on one response page in this fixture. It does not measure the
+cost of fetching many pages before ranking, or prove that a shortlist taken from
+an incomplete collection contains the cheapest matching offers.
+
 Outputs: [measurements.json](measurements.json) and the
 [fixture](../examples/context-budget.json) with the query, the index response and the
 decision view.
